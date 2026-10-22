@@ -1,0 +1,7 @@
+.root { height: 100%; display: flex; flex-direction: column; background: var(--dsw-alias-bg-base); color: var(--dsw-alias-label-primary); font: var(--dsw-font-s-14); }
+.bar { height: 40px; flex-shrink: 0; display: flex; align-items: center; gap: 2px; padding: 0 8px; border-bottom: 1px solid var(--dsw-alias-border-l1); }
+.spacer { flex: 1; }
+.main { flex: 1; min-height: 0; }
+.fail { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
+.failTitle { font: var(--dsw-font-base-16); font-weight: 600; }
+.failMsg { color: var(--dsw-alias-label-secondary); font: var(--dsw-font-xxs-12); max-width: 420px; text-align: center; }

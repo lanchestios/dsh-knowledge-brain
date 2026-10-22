@@ -1,0 +1,35 @@
+/* 照 DSH 右栏：铺满宿主给的右栏列（宽度由轨道定、可拖），左边一条分隔线 */
+.root { position: absolute; inset: 0; box-sizing: border-box; border-left: 1px solid var(--dsw-alias-border-l1); background: var(--dsw-alias-bg-base); color: var(--dsw-alias-label-primary); overflow: hidden; display: flex; flex-direction: column; }
+.head { flex: none; height: 44px; display: flex; align-items: center; justify-content: space-between; padding: 0 8px 0 16px; border-bottom: 1px solid var(--dsw-alias-border-l1); font: var(--dsw-font-s-14); font-weight: 500; }
+.body { flex: 1; min-height: 0; }
+.empty { padding: 16px; font: var(--dsw-font-xxs-12); color: var(--dsw-alias-label-tertiary); }
+.acts { display: flex; align-items: center; gap: 2px; }
+.session { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.session > * { flex: 1; min-height: 0; }
+.lead { flex: 1; min-width: 0; display: flex; align-items: center; gap: 6px; }
+.acts { flex: none; }
+/* 会话栏头照 DSH 会话头：祖先面包屑（可点）/ 当前标题（省略号）+ 子智能体计数胶囊 */
+.title { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.crumbs { min-width: 0; display: flex; align-items: center; overflow: hidden; white-space: nowrap; }
+.crumbSeg { min-width: 0; display: inline-flex; align-items: center; }
+.crumbSeg:last-child { flex: 1; }
+.crumbSeg:not(:last-child) { flex: 0 1 auto; max-width: 40%; }
+.crumbSep { flex: none; padding: 0 6px; color: var(--dsw-alias-label-tertiary); }
+.crumb { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 0; border: 0; background: none; font: inherit; color: var(--dsw-alias-label-secondary); cursor: pointer; }
+button.crumb:hover { color: var(--dsw-alias-label-primary); }
+.crumbCur { color: var(--dsw-alias-label-primary); cursor: default; }
+.chip { flex: none; display: inline-flex; align-items: center; gap: 4px; height: 22px; padding: 0 6px; border: 1px solid var(--dsw-alias-border-l1); border-radius: 11px; background: none; color: var(--dsw-alias-label-secondary); font: var(--dsw-font-xxs-12); cursor: pointer; }
+.chip:hover, .chip[aria-expanded="true"] { background: var(--dsw-alias-interactive-bg-hover); color: var(--dsw-alias-label-primary); }
+.session[hidden] { display: none; }
+/* 历史会话下拉浮层：栏头时钟按钮下弹出，浮在正文上；行内标题 + 相对时间，当前挂着的高亮 */
+.act { display: inline-flex; }
+.hist { position: absolute; top: 48px; right: 8px; left: 8px; z-index: 10; max-height: 60%; overflow: auto; display: flex; flex-direction: column; gap: 2px; padding: 6px; border: 1px solid var(--dsw-alias-border-l1); border-radius: var(--dsw-radius-md); background: var(--dsw-alias-bg-base); box-shadow: var(--dsw-shadow-lv3); }
+.histEmpty { padding: 12px 8px; font: var(--dsw-font-xxs-12); color: var(--dsw-alias-label-tertiary); }
+.hrow { display: flex; align-items: center; gap: 8px; min-width: 0; padding: 6px 8px; border: 0; border-radius: var(--dsw-radius-sm); background: none; color: var(--dsw-alias-label-primary); font: var(--dsw-font-xxs-12); text-align: left; cursor: pointer; }
+.hrow:hover { background: var(--dsw-alias-interactive-bg-hover); }
+.hcur, .hcur:hover { background: var(--dsw-alias-bg-layer-2); }
+.hname { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.htime { flex: none; color: var(--dsw-alias-label-tertiary); font-size: 11px; }
+/* 属性 tab：沉淀卡与检视上下接着排，整栏一起滚——哪块长都不会被裁（检视自带的滚动在这里放开） */
+.props { flex: 1; min-height: 0; overflow: auto; }
+.props > * { height: auto; overflow: visible; }

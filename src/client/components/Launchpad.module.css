@@ -1,0 +1,65 @@
+/* 空库沿用首页的信息架构，让第一次添加内容前后保持同一个空间模型。 */
+.root { max-width: 1160px; margin: 0 auto; padding: 24px 48px 36px;
+  display: flex; flex-direction: column; gap: 24px; }
+
+.hero { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px;
+  padding: 0 0 18px; border-bottom: 1px solid var(--dsw-alias-border-l1); }
+.eyebrow { display: block; margin-bottom: 6px; font: var(--dsw-font-xxs-12); font-weight: 600;
+  color: var(--dsw-alias-state-business-primary); }
+.title { margin: 0; font: 600 28px/36px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+  letter-spacing: 0; color: var(--dsw-alias-label-primary); }
+.summary { margin: 0 0 4px; display: flex; align-items: center; gap: 12px; font: var(--dsw-font-xs-13);
+  color: var(--dsw-alias-label-tertiary); white-space: nowrap; }
+.summary strong { margin-right: 3px; font: inherit; font-weight: 600; color: var(--dsw-alias-label-secondary); }
+.summary i { width: 3px; height: 3px; border-radius: 50%; background: var(--dsw-alias-border-l2); }
+.err { margin: -12px 0 0; font: var(--dsw-font-xxs-12); color: var(--dsw-alias-state-error-primary); }
+
+.section { min-width: 0; }
+.sectionHead { min-height: 36px; margin-bottom: 8px; display: flex; align-items: flex-start; justify-content: space-between; }
+.sectionTitle { margin: 0; font: 600 16px/24px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+  color: var(--dsw-alias-label-primary); }
+.sectionSub { margin: 4px 0 0; font: var(--dsw-font-xxs-12); color: var(--dsw-alias-label-tertiary); }
+
+/* 耳闻撤除后剩两卡，两列各占一半（原三卡三列） */
+.exploreGrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.exploreCard { min-width: 0; height: 112px; padding: 14px; display: flex; flex-direction: column; align-items: stretch;
+  border: 1px solid var(--dsw-alias-border-l1); border-radius: var(--dsw-radius-md);
+  background: var(--dsw-alias-bg-layer-1); color: var(--dsw-alias-label-primary); cursor: pointer; text-align: left; }
+.exploreCard:hover { background: var(--dsw-alias-interactive-bg-hover); }
+.exploreCard:disabled { cursor: default; opacity: .65; }
+.exploreCard:disabled:hover { background: var(--dsw-alias-bg-layer-1); }
+.cardTitle { display: flex; align-items: center; gap: 8px; color: var(--dsw-alias-state-business-primary); }
+.cardTitle strong { font: var(--dsw-font-s-14); font-weight: 600; color: var(--dsw-alias-label-primary); }
+.cardAction { margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  font: var(--dsw-font-xxs-12); color: var(--dsw-alias-label-secondary); }
+.cardAction svg { flex: none; color: var(--dsw-alias-label-tertiary); }
+
+.depositGrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 48px; padding-top: 2px; }
+.depositColumn { min-width: 0; min-height: 64px; padding: 10px 0; display: flex; flex-direction: column;
+  justify-content: center; border-top: 1px solid var(--dsw-alias-border-l1);
+  border-bottom: 1px solid var(--dsw-alias-border-l1); }
+.depositColumn + .depositColumn { position: relative; }
+.depositColumn + .depositColumn::before { content: ''; position: absolute; top: 0; bottom: 0; left: -24px; width: 1px;
+  background: var(--dsw-alias-border-l1); }
+.depositColumn h3 { margin: 0 0 6px; font: var(--dsw-font-xs-13); font-weight: 600;
+  color: var(--dsw-alias-label-primary); }
+.depositColumn p { margin: 0; font: var(--dsw-font-xxs-12); color: var(--dsw-alias-label-tertiary); }
+
+@keyframes wkRise { from { opacity: 0; transform: translateY(8px); } }
+.hero { animation: wkRise .24s cubic-bezier(.2, 0, 0, 1) both; }
+.section { animation: wkRise .28s cubic-bezier(.2, 0, 0, 1) .04s both; }
+.section + .section { animation-delay: .1s; }
+@media (prefers-reduced-motion: reduce) { .hero, .section { animation: none; } }
+
+@container (max-width: 480px) {
+  .exploreGrid { grid-template-columns: 1fr; }
+  .exploreCard { height: 76px; }
+  .depositGrid { grid-template-columns: 1fr; gap: 16px; }
+  .depositColumn + .depositColumn::before { display: none; }
+}
+@container (max-width: 700px) {
+  .root { padding: 20px 18px 32px; gap: 24px; }
+  .hero { align-items: flex-start; flex-direction: column; gap: 12px; padding-bottom: 16px; }
+  .summary { white-space: normal; flex-wrap: wrap; gap: 8px; }
+  .sectionHead { margin-bottom: 10px; }
+}

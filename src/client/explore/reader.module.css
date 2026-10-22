@@ -1,0 +1,11 @@
+.root { height: 100%; display: flex; min-height: 0; }
+.pane { flex: 1; min-width: 0; min-height: 0; display: flex; flex-direction: column; }
+.scroll { flex: 1; min-height: 0; overflow: auto; }
+.raw { max-width: 960px; margin: 0 auto; padding: 32px 40px; font: var(--dsw-font-markdown-base); line-height: 1.75; color: var(--dsw-alias-label-primary); white-space: pre-wrap; word-break: break-word; }
+.md { max-width: 960px; margin: 0 auto; padding: 32px 40px; }
+.raw p { margin: .9em 0; }
+.raw .h { font-weight: 600; margin: 1.5em 0 .5em; }
+.empty { padding: 40px 24px; display: flex; flex-direction: column; gap: 10px; align-items: flex-start; color: var(--dsw-alias-label-secondary); font: var(--dsw-font-s-14); }
+
+/* 窄容器：收边距 */
+@container (max-width: 700px) { .raw, .md { padding: 16px; } }

@@ -1,0 +1,30 @@
+/* 三类探索对象是平级入口：各自一张轻卡，内部只留指标和最近 5 条。 */
+/* 耳闻撤除后剩两卡（书籍 / 文档），两列各占一半填满行（原三卡三列） */
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.tile { min-width: 0; display: flex; flex-direction: column; overflow: hidden;
+  border: 1px solid var(--dsw-alias-border-l1); border-radius: 8px; background: var(--dsw-alias-bg-layer-1); }
+.tileHead { flex: none; display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 14px; }
+.tileTitle { font: var(--dsw-font-xs-13); font-weight: 600; color: var(--dsw-alias-label-primary); }
+.more { margin-left: auto; }
+.body { flex: 1; padding: 0 14px 14px; display: flex; flex-direction: column; gap: 10px; }
+.meta { flex: none; white-space: nowrap; font: var(--dsw-font-xxs-12); color: var(--dsw-alias-label-secondary); }
+.row { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.list { display: flex; flex-direction: column; }
+.item { display: flex; align-items: center; gap: 10px; height: 32px; padding: 0 8px; margin: 0 -8px;
+  border: 0; border-radius: var(--dsw-radius-sm); background: none; text-align: left; cursor: pointer;
+  color: var(--dsw-alias-label-primary); font: var(--dsw-font-s-14); }
+.item:hover { background: var(--dsw-alias-interactive-bg-hover); }
+.itemName { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mini { width: 112px; flex: none; }
+.mini > div { margin-top: 0; height: 6px; }
+.big { display: flex; flex: none; align-items: baseline; gap: 8px; min-width: 0; border: 0; background: none;
+  padding: 0; cursor: pointer; text-align: left; }
+.num { font: 600 28px/36px -apple-system, "PingFang SC", sans-serif; color: var(--wk-todo); }
+.lbl { font: var(--dsw-font-xxs-12); font-weight: 500; color: var(--dsw-alias-label-tertiary); margin-bottom: -6px; }
+.go { display: inline-flex; align-items: center; gap: 2px; }
+.numBooks { color: var(--wk-read); }
+
+@container (max-width: 980px) {
+  .grid { grid-template-columns: 1fr; }
+  .tile { min-height: 0; }
+}

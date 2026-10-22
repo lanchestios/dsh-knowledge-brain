@@ -1,0 +1,63 @@
+/* 首页用留白建立层级：概览、探索入口、沉淀列表。卡片只留给三类探索对象。 */
+.root { --wk-done: #1baf7a; max-width: 1160px; margin: 0 auto; padding: 24px 48px 36px;
+  display: flex; flex-direction: column; gap: 24px; }
+:global(body[data-ds-dark-theme]) .root { --wk-done: #199e70; }
+
+.hero { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px;
+  padding: 0 0 18px; border-bottom: 1px solid var(--dsw-alias-border-l1); }
+.eyebrow { display: block; margin-bottom: 6px; font: var(--dsw-font-xxs-12); font-weight: 600;
+  color: var(--dsw-alias-state-business-primary); }
+.title { margin: 0; font: 600 28px/36px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+  letter-spacing: 0; color: var(--dsw-alias-label-primary); }
+.summary { margin: 0 0 4px; display: flex; align-items: center; gap: 12px; font: var(--dsw-font-xs-13);
+  color: var(--dsw-alias-label-tertiary); white-space: nowrap; }
+.summary strong { margin-right: 3px; font: inherit; font-weight: 600; color: var(--dsw-alias-label-secondary); }
+.summary i { width: 3px; height: 3px; border-radius: 50%; background: var(--dsw-alias-border-l2); }
+
+.section { min-width: 0; }
+.sectionHead { min-height: 36px; margin-bottom: 8px; display: flex; align-items: flex-start; justify-content: space-between; }
+.sectionTitle { margin: 0; font: 600 16px/24px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+  color: var(--dsw-alias-label-primary); }
+.sectionSub { margin: 4px 0 0; font: var(--dsw-font-xxs-12); color: var(--dsw-alias-label-tertiary); }
+.explore { min-width: 0; }
+.depositGrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 48px; padding-top: 2px; }
+
+.tile { min-width: 0; display: flex; flex-direction: column; }
+.tile + .tile { position: relative; }
+.tile + .tile::before { content: ''; position: absolute; top: 0; bottom: 0; left: -24px; width: 1px;
+  background: var(--dsw-alias-border-l1); }
+.tileHead { flex: none; display: flex; align-items: center; gap: 8px; height: 36px; }
+.tileTitle { font: var(--dsw-font-xs-13); font-weight: 600; color: var(--dsw-alias-label-primary); }
+.more { margin-left: auto; }
+.go { display: inline-flex; align-items: center; gap: 2px; }
+
+.dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; flex: none; margin-right: 10px; }
+.body { display: flex; flex-direction: column; gap: 4px; }
+.empty { font: var(--dsw-font-s-14); color: var(--dsw-alias-label-tertiary); padding: 10px 0; }
+
+.row { display: flex; align-items: center; height: 34px; padding: 0 8px; margin: 0 -8px; border: 0;
+  border-radius: var(--dsw-radius-sm); background: none; cursor: pointer; text-align: left;
+  font: var(--dsw-font-s-14); color: var(--dsw-alias-label-primary); }
+.row:hover { background: var(--dsw-alias-interactive-bg-hover); }
+.rowName { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rowTime { flex: none; font: var(--dsw-font-xxs-12); color: var(--dsw-alias-label-tertiary); font-variant-numeric: tabular-nums; }
+
+.halfEmpty { margin: 0; padding: 20px 0; font: var(--dsw-font-s-14); color: var(--dsw-alias-label-tertiary); }
+
+@keyframes wkRise { from { opacity: 0; transform: translateY(10px); } }
+.landed .section { animation: wkRise .3s cubic-bezier(.2, 0, 0, 1) both; }
+.landed .section + .section { animation-delay: .08s; }
+@media (prefers-reduced-motion: reduce) { .landed .section { animation: none; } }
+
+/* 容器随 DSH 左右栏变化；用容器宽度决定布局比视口更可靠。 */
+@container (max-width: 860px) {
+  .depositGrid { grid-template-columns: 1fr; gap: 24px; }
+  .tile + .tile { padding-top: 24px; border-top: 1px solid var(--dsw-alias-border-l1); }
+  .tile + .tile::before { display: none; }
+}
+@container (max-width: 700px) {
+  .root { padding: 20px 18px 32px; gap: 24px; }
+  .hero { align-items: flex-start; flex-direction: column; gap: 12px; padding-bottom: 16px; }
+  .summary { white-space: normal; flex-wrap: wrap; gap: 8px; }
+  .sectionHead { margin-bottom: 10px; }
+}

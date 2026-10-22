@@ -1,0 +1,31 @@
+/* tab 条：ReaderPage 顶栏下方一行，横向滚动容纳溢出。经典文件夹页：条铺浅底、非活动 tab 是
+   灰纸片；活动 tab 抬高 2px、底色与正文一致，::after 盖掉条底边框在自己下方的一段——
+   页签与正文连成一张纸，「这篇正文属于这个页签」一眼可读 */
+.bar { flex: none; display: flex; align-items: flex-end; gap: 3px; height: 38px; padding: 6px 8px 0;
+  background: var(--dsw-alias-bg-layer-1); border-bottom: 1px solid var(--dsw-alias-border-l2); overflow: hidden; }
+.tab, .on { display: flex; align-items: center; gap: 6px; padding: 0 10px; height: 30px; flex: 0 1 12em; min-width: 40px; max-width: 16em; container-type: inline-size; box-sizing: border-box;
+  border: 1px solid var(--dsw-alias-border-l2); border-bottom: 0; border-radius: 8px 8px 0 0;
+  background: var(--dsw-alias-fill-secondary); cursor: pointer; white-space: nowrap;
+  font: var(--dsw-font-xs-13); color: var(--dsw-alias-label-secondary); }
+.tab:hover { color: var(--dsw-alias-label-primary); }
+.on { position: relative; height: 32px; margin-bottom: -1px; z-index: 1;
+  border-color: var(--dsw-alias-border-l3); background: var(--dsw-alias-bg-base);
+  color: var(--dsw-alias-label-primary); font-weight: 600; }
+.on::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px;
+  background: var(--dsw-alias-bg-base); }
+.name { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.x { border: 0; background: none; padding: 0 2px; border-radius: 4px; cursor: pointer;
+  color: var(--dsw-alias-label-tertiary); font: var(--dsw-font-xs-13); line-height: 1; }
+.x:hover { background: var(--dsw-alias-fill-secondary); color: var(--dsw-alias-label-primary); }
+/* 只压窄、不滚动：tab 一起变窄到 40px；窄到放不下 × 时只留标题，活动 tab 与悬停中的 tab 始终有 × */
+@container (max-width: 64px) {
+  .tab:not(:hover) .x { display: none; }
+}
+/* 指针拖动：按住时不选中文字；拖动中条加 .slide，其他 tab 的让位带过渡；被拖的 .lift 浮在上面、
+   底色同正文、带阴影，不跟过渡（跟手） */
+.tab, .on { user-select: none; -webkit-user-select: none; touch-action: pan-y; }
+.slide > .tab, .slide > .on { transition: transform .18s ease; }
+.slide > .lift { transition: none; position: relative; z-index: 3; cursor: grabbing;
+  background: var(--dsw-alias-bg-base); border-color: var(--dsw-alias-border-l3); color: var(--dsw-alias-label-primary);
+  box-shadow: 0 8px 24px rgba(20, 30, 50, .16), 0 2px 6px rgba(20, 30, 50, .08); }
+@media (prefers-reduced-motion: reduce) { .slide > .tab, .slide > .on { transition: none; } }

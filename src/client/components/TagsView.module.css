@@ -1,0 +1,15 @@
+.root { max-width: 896px; margin: 0 auto; padding: 40px; display: flex; flex-direction: column; gap: 24px; }
+.narrow { max-width: 768px; gap: 16px; }
+.h1 { font: var(--dsw-font-l-20); font-weight: 600; margin: 0; }
+.count { color: var(--dsw-alias-label-secondary); font: var(--dsw-font-base-16); font-weight: 400; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.n { margin-left: 4px; color: var(--dsw-alias-label-secondary); font-variant-numeric: tabular-nums; }
+.list { display: flex; flex-direction: column; }
+.item { display: block; width: calc(100% + 16px); text-align: left; padding: 12px 8px; margin: 0 -8px; border: 0; border-bottom: 1px solid var(--dsw-alias-border-l1); border-radius: var(--dsw-radius-sm); background: none; color: inherit; font: inherit; cursor: pointer; }
+.item:hover { background: var(--dsw-alias-interactive-bg-hover); }
+.name { font-weight: 500; }
+.crumb { margin-left: 8px; font: var(--dsw-font-xxs-12); color: var(--dsw-alias-label-secondary); font-weight: 400; }
+.desc { font: var(--dsw-font-s-14); color: var(--dsw-alias-label-secondary); }
+
+/* 窄容器：收边距 */
+@container (max-width: 700px) { .root { padding: 24px 16px; } }

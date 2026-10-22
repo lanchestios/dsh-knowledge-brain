@@ -1,0 +1,10 @@
+/* crumb 三条照抄 ExploreCrumb 的 crumb.module.css，保证两版面包屑长得一样 */
+.crumb { min-width: 0; flex: 0 1 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-left: 6px; font: var(--dsw-font-xs-13); color: var(--dsw-alias-label-tertiary); }
+.crumb button { border: 0; background: none; padding: 0; font: inherit; color: var(--dsw-alias-label-secondary); cursor: pointer; }
+.crumb button:hover { color: var(--dsw-alias-label-primary); }
+.crumb > span { color: var(--dsw-alias-label-primary); }
+
+/* 状态 + 动作：面包屑旁边独立一份，不参与压缩与省略。
+   状态颜色交给 DSH Tag 的 tone（词色表见 KbCrumb.tsx 的 TONE），这里只管摆位 */
+.tail { flex: none; display: inline-flex; align-items: center; gap: 8px; margin-left: 8px; font: var(--dsw-font-xs-13); }
+.err { font: var(--dsw-font-xxs-12); color: var(--dsw-alias-state-error-primary); }

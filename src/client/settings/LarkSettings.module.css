@@ -1,0 +1,70 @@
+/* 设置卡的区块与摘要卡视觉（知识问答 / 知识听录共用）：标题行 + 只读摘要卡（卡头名字 + 状态、
+   卡身一行元信息），动作钮 icon+文字。知识问答：标题行右侧「+ 新增」开 Modal，行尾「会话」跳
+   会话记录整页、铅笔开同一个 Modal 编辑、「检测/删除」就地生效；知识听录：整卡可点开 Modal
+   （.cfgCard），「检测」就地跑。token 口径同 WikiSettingsCard.module.css，外壳自动保存 */
+
+.block { margin-top: 24px; display: flex; flex-direction: column; gap: 10px; }
+.headRow { display: flex; align-items: center; gap: 8px; }
+.title { margin: 0; font-size: 13px; font-weight: 500; line-height: 1.5; color: var(--dsw-alias-label-primary); }
+/* icon+文字的小动作按钮：新增/会话/编辑/检测/删除同一套 */
+.actBtn, .addBtn { display: inline-flex; align-items: center; gap: 4px; height: 26px; padding: 0 8px; border: none; border-radius: var(--dsw-radius-sm); background: transparent; font-size: 12px; color: var(--dsw-alias-label-secondary); cursor: pointer; }
+.actBtn:hover:not(:disabled), .addBtn:hover:not(:disabled) { background: var(--dsw-alias-interactive-bg-hover); color: var(--dsw-alias-label-primary); }
+.actBtn:disabled, .addBtn:disabled { opacity: 0.4; cursor: default; }
+.addBtn { margin-left: auto; }
+
+/* —— 机器人摘要行（行尾动作：会话 / 编辑 / 检测 / 删除，icon+文字）—— */
+.cards { display: flex; flex-direction: column; gap: 10px; }
+.botCard { display: flex; flex-direction: column; gap: 8px; padding: 10px 12px; border: 0.5px solid var(--dsw-alias-border-l2); border-radius: var(--dsw-radius-md); }
+.botHead { display: flex; align-items: center; gap: 8px; min-width: 0; flex-wrap: wrap; }
+.botName { font-size: 13px; font-weight: 500; line-height: 1.5; color: var(--dsw-alias-label-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
+.botId { font-size: 11px; color: var(--dsw-alias-label-tertiary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
+.cardActions { margin-left: auto; display: inline-flex; align-items: center; gap: 4px; flex-shrink: 0; }
+.botMeta { display: flex; align-items: center; gap: 8px; min-width: 0; font-size: 12px; line-height: 1.5; color: var(--dsw-alias-label-secondary); }
+.botMeta > span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.botModel { font-size: 11px; color: var(--dsw-alias-label-tertiary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* 知识听录的配置卡：摘要卡同一副骨架，整卡可点（开 Modal）；只读时不给手型不给 hover */
+.cfgCard { display: flex; flex-direction: column; gap: 8px; padding: 10px 12px; border: 0.5px solid var(--dsw-alias-border-l2); border-radius: var(--dsw-radius-md); }
+.cfgCard[tabindex="0"] { cursor: pointer; }
+.cfgCard[tabindex="0"]:hover { background: var(--dsw-alias-interactive-bg-hover); }
+.cfgCard[tabindex="0"]:focus-visible { outline: 2px solid var(--dsw-alias-state-business-primary); outline-offset: -2px; }
+.verifyOk { margin: 0; font-size: 12px; line-height: 1.5; color: var(--dsw-alias-state-business-primary); word-break: break-all; min-width: 0; }
+.verifyErr { margin: 0; font-size: 12px; line-height: 1.5; color: var(--dsw-alias-state-error-primary); word-break: break-all; min-width: 0; }
+/* 检测出的权限缺项：一行一项，必需项红、其余黄；权限码等宽便于到开放平台里搜 */
+.scopeList { margin: 2px 0 0; padding: 0; list-style: none; font-size: 12px; line-height: 1.6; min-width: 0; }
+.scopeErr { color: var(--dsw-alias-state-error-primary); }
+.scopeWarn { color: var(--dsw-alias-state-warn-primary); }
+.scopeList code { font-size: 11px; }
+
+/* 状态 chip：小圆点 + 词，颜色即状态（连接/问答状态共用一套） */
+.chipOk, .chipOff, .chipWarn, .chipErr, .chipDraft, .chipLoadingTone { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; line-height: 1.4; white-space: nowrap; }
+.chipOk::before, .chipOff::before, .chipWarn::before, .chipErr::before, .chipDraft::before, .chipLoadingTone::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+.chipOk { color: var(--dsw-alias-state-business-primary); }
+.chipOff { color: var(--dsw-alias-label-tertiary); }
+.chipWarn { color: var(--dsw-alias-state-warn-primary); }
+.chipErr { color: var(--dsw-alias-state-error-primary); }
+.chipDraft { color: var(--dsw-alias-label-dimmed); }
+/* 校验中：进行态，要看得清（draft 的 dimmed 太浅），用正文次级色 */
+.chipLoadingTone { color: var(--dsw-alias-label-secondary); }
+
+/* —— Modal 表单：标签在控件上方，单列纵排（卡脚只有取消/确定，检测在卡上）—— */
+.form { display: flex; flex-direction: column; gap: 12px; }
+.mField { display: flex; flex-direction: column; gap: 4px; }
+.mField > span { font-size: 12px; line-height: 1.4; color: var(--dsw-alias-label-secondary); }
+.form select { height: 34px; padding: 0 8px; border: 0.5px solid var(--dsw-alias-border-l4); border-radius: var(--dsw-radius-md); background: var(--dsw-alias-bg-layer-3); font: inherit; font-size: 13px; color: var(--dsw-alias-label-primary); }
+.form select:focus-visible { outline: none; border-color: var(--dsw-alias-state-business-primary); }
+.form select optgroup { font-style: normal; }
+
+/* 配置引导（默认收起，展开给Lark侧五件套清单） */
+.guideEntry { margin-top: 4px; display: flex; flex-direction: column; gap: 8px; }
+.guideToggle { align-self: flex-start; background: none; border: none; padding: 0; cursor: pointer; font-size: 12px; color: var(--dsw-alias-label-secondary); }
+.guideToggle:hover { color: var(--dsw-alias-label-primary); }
+.guideBox { border: 0.5px solid var(--dsw-alias-border-l2); border-radius: var(--dsw-radius-md); padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; font-size: 12px; line-height: 1.7; color: var(--dsw-alias-label-secondary); }
+.guideBox p { margin: 0; }
+.guideBox ol { margin: 0; padding-left: 18px; }
+.guideBox a { color: var(--dsw-alias-label-primary); }
+.guideBox code { font-size: 11px; }
+/* 加载态 chip：转圈图标替掉小圆点（知识库校验中） */
+.chipLoading::before { display: none; }
+.spin { animation: wkSpin 1s linear infinite; flex: none; }
+@keyframes wkSpin { to { transform: rotate(360deg) } }
+@media (prefers-reduced-motion: reduce) { .spin { animation-duration: 2.4s } }

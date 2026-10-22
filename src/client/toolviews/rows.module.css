@@ -1,0 +1,8 @@
+.row { display: flex; flex-direction: column; gap: 4px; padding: 6px 10px; border: 1px solid var(--dsw-alias-border-l1); border-radius: var(--dsw-radius-sm); background: var(--dsw-alias-bg-layer-1); font: var(--dsw-font-s-14); color: var(--dsw-alias-label-primary); }
+.head { display: flex; align-items: center; gap: 6px; font: var(--dsw-font-xxs-12); color: var(--dsw-alias-label-secondary); }
+.hit { display: flex; align-items: baseline; gap: 8px; min-width: 0; border: 0; background: none; padding: 2px 0; text-align: left; font: inherit; color: inherit; cursor: pointer; }
+.hit:hover .name { text-decoration: underline; }
+.name { font-weight: 500; color: var(--dsw-alias-link); white-space: nowrap; }
+.crumb { font: var(--dsw-font-xxs-12); color: var(--dsw-alias-label-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.desc { font: var(--dsw-font-xxs-12); color: var(--dsw-alias-label-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.err { color: var(--dsw-alias-state-error-primary); font: var(--dsw-font-xxs-12); }

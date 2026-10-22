@@ -1,0 +1,29 @@
+.wrap { display: flex; flex-direction: column; gap: 6px; }   /* 面板 portal 出去了，gap 已不作用于它 */
+.trigger { display: flex; align-items: center; gap: 6px; width: 100%; min-height: 34px; padding: 0 9px; text-align: left; border: 0.5px solid var(--dsw-alias-border-l4); border-radius: var(--dsw-radius-md); background: var(--dsw-alias-bg-layer-3); font: inherit; font-size: 13px; color: var(--dsw-alias-label-primary); cursor: pointer; }
+.trigger:focus-visible, .trigger[aria-expanded="true"] { outline: none; border-color: var(--dsw-alias-state-business-primary); }
+.trigger:disabled { opacity: .5; cursor: not-allowed; }
+.crumbs { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sep { margin: 0 3px; color: var(--dsw-alias-label-tertiary); }
+.last { font-weight: 600; }
+.placeholder { color: var(--dsw-alias-label-tertiary); }
+.missing { color: var(--dsw-alias-state-error-primary); }
+.missingTag { flex: none; font-size: 11px; color: var(--dsw-alias-state-error-primary); }
+.caret { flex: none; font-size: 10px; color: var(--dsw-alias-label-tertiary); }
+.panel { position: fixed; z-index: 1100; box-sizing: border-box; box-shadow: 0 8px 28px rgba(0,0,0,.18); display: flex; flex-direction: column; border: 0.5px solid var(--dsw-alias-border-l4); border-radius: var(--dsw-radius-md); background: var(--dsw-alias-bg-layer-3); }
+.search { margin: 6px 6px 2px; height: 30px; padding: 0 8px; border: 0.5px solid var(--dsw-alias-border-l4); border-radius: var(--dsw-radius-md); background: var(--dsw-alias-bg-layer-2); font: inherit; font-size: 13px; color: var(--dsw-alias-label-primary); }
+.search:focus { outline: none; border-color: var(--dsw-alias-state-business-primary); }
+.list { max-height: 320px; overflow: auto; padding: 2px 4px 4px; }
+.row { display: flex; align-items: center; gap: 2px; min-height: 26px; padding-right: 8px; border-radius: var(--dsw-radius-sm); cursor: pointer; user-select: none; font-size: 13px; color: var(--dsw-alias-label-primary); }
+.row:hover { background: var(--dsw-alias-bg-layer-2); }
+.row[data-active="true"] { background: var(--dsw-alias-bg-layer-2); box-shadow: inset 0 0 0 1px var(--dsw-alias-border-l4); }
+.row[aria-selected="true"] .name { font-weight: 600; color: var(--dsw-alias-state-business-primary); }
+.ghost .name { color: var(--dsw-alias-label-tertiary); }
+.rootRow .name { font-weight: 600; }
+.twisty { flex: none; width: 18px; text-align: center; font-size: 10px; color: var(--dsw-alias-label-tertiary); background: none; border: none; padding: 0; cursor: pointer; }
+.twisty:hover { color: var(--dsw-alias-label-primary); }
+.name { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.name mark { background: var(--dsw-alias-state-warn-primary); color: inherit; border-radius: 2px; padding: 0 1px; opacity: .85; }
+.check { flex: none; width: 14px; text-align: center; font-size: 12px; color: var(--dsw-alias-state-business-primary); }
+.empty { padding: 14px; text-align: center; font-size: 12px; color: var(--dsw-alias-label-tertiary); }
+.group { cursor: default; }   /* 选页时没有索引页的文件夹：只当分组，点它是展开收起 */
+.group .name { color: var(--dsw-alias-label-secondary); }

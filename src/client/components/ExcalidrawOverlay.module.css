@@ -1,0 +1,21 @@
+/* 覆盖层 portal 到 document.body，逃出宿主主题作用域——DSH Button 的 primary 底/hover 在这里
+   解析成深色（发黑）。按用户裁定按钮走蓝色系：钉链接蓝（主题有 --dsw-alias-link 就跟、
+   没有退 #2563eb），hover 同色不闪变，前景字恒白 */
+.overlay {
+  position: fixed; inset: 0; z-index: 1200; display: flex; flex-direction: column;
+  background: var(--dsw-alias-bg-layer-1);
+  --dsw-alias-button-primary-fill: var(--dsw-alias-link, #2563eb);
+  --dsw-alias-button-primary-hover: var(--dsw-alias-link, #2563eb);
+  --dsw-alias-label-primary-foreground: #fff;
+}
+/* 顶栏只放两件事：保存/关闭与错误文案。chrome 颜色全走宿主变量（跟明暗） */
+.bar { display: flex; align-items: center; justify-content: flex-end; gap: 8px; padding: 8px 12px; border-bottom: 0.5px solid var(--dsw-alias-border-l4); flex: none; }
+.bar button { all: unset; cursor: pointer; padding: 4px 12px; border-radius: var(--dsw-radius-sm); font-size: 13px; color: var(--dsw-alias-text-primary); display: inline-flex; align-items: center; gap: 6px; }
+/* all:unset 剥掉 DSH 按钮内部布局后，图标按行内基线排会顶上偏（实测距顶 4px/距底 8.5px）：
+   flex 居中 + svg 转块级，图标与文字都落在按钮垂直中心 */
+.bar button svg { display: block; }
+.bar button:hover { background: var(--dsw-alias-bg-interactive-hover); }
+.bar [data-primary=''] { background: var(--dsw-alias-button-primary-bg, #2563eb); color: var(--dsw-alias-button-primary-text, #fff); }
+.bar [role='alert'] { margin-right: auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--dsw-alias-danger, #d0453b); font-size: 13px; }
+.err { padding: 40px 24px; text-align: center; color: var(--dsw-alias-danger, #d0453b); font-size: 14px; }
+.canvas { flex: 1; min-height: 0; }

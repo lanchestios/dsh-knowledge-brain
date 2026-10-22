@@ -1,0 +1,59 @@
+/* 字段行：排版跟着平台的 SettingsValueField（ui-primitives 的 fields.module.css）走，控件换成目录选择按钮。
+   表单外壳自己出（autoForm）：改完自动保存，没有保存条；只读/失败提示和「自动保存中…」在页脚 */
+
+.field { display: flex; flex-direction: column; gap: 6px; padding: 12px 0; }
+.field + .field { border-top: 0.5px solid var(--dsw-alias-border-l2); }
+.head { display: flex; align-items: center; gap: 8px; }
+.labelGroup { display: flex; align-items: center; gap: 4px; flex: 1; min-width: 0; }
+.label { flex: 0 1 auto; font-size: 13px; font-weight: 500; line-height: 1.5; color: var(--dsw-alias-label-primary); }
+
+.autoForm { display: flex; flex-direction: column; }
+.autosave { margin: 8px 0 0; font-size: 11px; line-height: 1.5; color: var(--dsw-alias-label-tertiary); }
+
+/* 选择框：长得跟平台的 .input 一致（高 34、同边框圆角背景），点了开目录选择 */
+.placeholder { color: var(--dsw-alias-label-dimmed); }
+
+.hint { margin: 0; font-size: 12px; line-height: 1.5; color: var(--dsw-alias-label-tertiary); }
+.hintLoading { display: flex; align-items: center; gap: 6px; color: var(--dsw-alias-label-secondary); }
+.spin { flex: none; animation: wkDirSpin 1s linear infinite; }
+@keyframes wkDirSpin { to { transform: rotate(360deg) } }
+@media (prefers-reduced-motion: reduce) { .spin { animation-duration: 2.4s } }
+.invalid { margin: 0; font-size: 12px; line-height: 1.5; color: var(--dsw-alias-state-error-primary); }
+
+/* browse 弹层：顶栏（主目录 / 新建文件夹 / 隐藏目录开关）+ 面包屑 + 子目录列表 */
+.pickBar { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.crumbs { display: flex; align-items: center; min-width: 0; margin-bottom: 8px; font: var(--dsw-font-xxs-12); overflow: hidden; white-space: nowrap; }
+.crumbWrap { display: inline-flex; align-items: center; min-width: 0; }
+.crumbSep { flex: none; color: var(--dsw-alias-label-tertiary); }
+.crumb, .crumbCur { border: none; background: none; padding: 2px 4px; border-radius: var(--dsw-radius-sm, 4px); font: inherit; cursor: pointer; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.crumb { color: var(--dsw-alias-label-secondary); }
+.crumb:hover { background: var(--dsw-alias-interactive-bg-hover); color: var(--dsw-alias-label-primary); }
+.crumbCur { color: var(--dsw-alias-label-primary); font-weight: 600; cursor: default; }
+.pickList { display: flex; flex-direction: column; gap: 2px; max-height: 320px; overflow: auto; }
+.pickRow { display: flex; align-items: center; gap: 8px; height: 30px; padding: 0 8px; border: none; border-radius: var(--dsw-radius-md); background: transparent; color: var(--dsw-alias-label-primary); font: var(--dsw-font-s-14); cursor: pointer; text-align: left; }
+.pickRow:hover { background: var(--dsw-alias-interactive-bg-hover); }
+.pickName { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pickDim { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--dsw-alias-label-tertiary); }
+.newRow { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; color: var(--dsw-alias-label-secondary); }
+.newName { flex: 1; min-width: 0; }
+
+/* 知识听录：卡下检测结果一行（条目 · 条目，逐条 ✓/✗ 各自着色）；勾选行与提示语给 Modal 里的来源开关/隐私行用 */
+.check { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--dsw-alias-label-primary); }
+.check + .check { margin-left: 12px; }
+.envLine { margin-top: 4px; font-size: 12px; line-height: 1.5; min-width: 0; word-break: break-all; }
+.envOk { color: var(--dsw-alias-state-success-primary, #1baf7a); }
+.envBad { color: var(--dsw-alias-state-error-primary); }
+
+/* 知识库目录行：路径只读 + 新建 / 打开 */
+.dirRow { display: flex; align-items: center; gap: 8px; }
+.dirPath { flex: 1; min-width: 0; display: flex; align-items: center; height: 34px; padding: 0 12px; border: 0.5px solid var(--dsw-alias-border-l4); border-radius: var(--dsw-radius-md); background: var(--dsw-alias-bg-layer-3); font-size: 13px; overflow: hidden; white-space: nowrap; }
+.failList, .moveList { margin: 4px 0 0; padding-left: 20px; font-size: 12px; line-height: 1.7; }
+.failList { color: var(--dsw-alias-state-error-primary); }
+.copyBox { margin-top: 8px; padding: 8px 10px; border: 0.5px dashed var(--dsw-alias-border-l4); border-radius: var(--dsw-radius-md); background: var(--dsw-alias-bg-layer-3); }
+.copyBar { display: flex; align-items: center; justify-content: space-between; font-size: 12px; font-weight: 500; color: var(--dsw-alias-label-secondary); }
+.copyText { margin: 4px 0 0; font-size: 12px; line-height: 1.7; color: var(--dsw-alias-label-primary); word-break: break-all; }
+.opts { display: flex; flex-direction: column; gap: 8px; margin: 10px 0; }
+.opt, .optOn { display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border: 0.5px solid var(--dsw-alias-border-l4); border-radius: var(--dsw-radius-md); background: transparent; font: inherit; text-align: left; color: var(--dsw-alias-label-primary); cursor: pointer; }
+.optOn { border: 1.5px solid var(--dsw-alias-state-business-primary); }
+.opt span, .optOn span { font-size: 12px; color: var(--dsw-alias-label-tertiary); }
+.result { margin: 0; font-size: 13px; line-height: 1.9; }

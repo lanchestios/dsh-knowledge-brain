@@ -1,0 +1,24 @@
+/* macOS 桌面、左栏收起：DSH 把红绿灯与 shell.leading 悬浮按钮盖在主区左上角
+   （此时左栏整列收没、主区顶到 x=0），并发布 --dsh-frame-leading-clearance 让
+   顶到左上角的主面板让位；其余平台 / 展开态变量未定义，落回 12px 原样 */
+.bar { container: topbar / inline-size; height: 44px; flex-shrink: 0; display: flex; align-items: center; gap: 4px; padding: 0 12px; padding-left: max(12px, var(--dsh-frame-leading-clearance, 0px)); border-bottom: 1px solid var(--dsw-alias-border-l1); background: var(--dsw-specific-sidebar-fill); }
+.spacer { flex: 1; }
+
+.bar > button, .bar > [role="tablist"] { flex-shrink: 0; white-space: nowrap; }
+/* 右栏入口（样式 D）：属性没按下时次级字色，按下描边（variant=outline）；AI 品牌色，按下填浅品牌底 */
+.rail { color: var(--dsw-alias-label-secondary); }
+.rail[aria-pressed="true"] { color: var(--dsw-alias-label-primary); }
+.ai { --brand: var(--dsw-alias-brand-primary-new-colorprimary-new-color, #4176e6); color: var(--brand); }
+.ai:hover:not(:disabled) { background: color-mix(in srgb, var(--brand) 10%, transparent); }
+.ai[aria-pressed="true"] { background: color-mix(in srgb, var(--brand) 14%, transparent); }
+
+/* 窄屏：按主区（不是窗口）宽度收，左右栏拖宽也算。< 620 编辑 / 查看 / 图谱只留图标，< 480 属性 / AI 也只留图标；
+   字收掉后靠 title / aria-label 认。data-* 跨模块认（EditControls 的按钮也挂了），不随 CSS Modules 改名 */
+@container topbar (max-width: 620px) {
+  .bar [data-collapse="act"] > [data-label] { display: none; }
+  .bar [data-collapse="act"] { padding: 0 6px; }
+}
+@container topbar (max-width: 480px) {
+  .bar [data-collapse="rail"] > [data-label] { display: none; }
+  .bar [data-collapse="rail"] { padding: 0 6px; }
+}

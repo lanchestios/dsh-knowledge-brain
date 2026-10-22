@@ -1,0 +1,7 @@
+/* 欢迎页快捷开始：药丸签一枚一件事，跟 hero 工作区行里的工作区 chip 同排；
+   hover 描边与文字转品牌色（DSH 签的惯例） */
+.wrap { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-left: 8px; }
+.chip { height: 26px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--dsw-alias-border-l2);
+  background: var(--dsw-alias-bg-layer-1); font: var(--dsw-font-xxs-12); color: var(--dsw-alias-label-secondary); cursor: pointer; }
+.chip:hover { border-color: var(--dsw-alias-state-business-primary); color: var(--dsw-alias-state-business-primary); }
+.chip:active { transform: scale(.97); }

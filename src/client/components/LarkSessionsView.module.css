@@ -1,0 +1,21 @@
+/* 会话记录页（整页）：标题 + 机器人行 + 每 chat 一张行卡（当前会话一行＋归档行）。
+   页框同 TagsView（窄栏居中），行卡沿用设置卡里验证过的那套小样式 */
+
+.root { max-width: 768px; margin: 0 auto; padding: 40px; display: flex; flex-direction: column; gap: 12px; }
+.h1 { font: var(--dsw-font-l-20); font-weight: 600; margin: 0; }
+.bot { margin: 0; font: var(--dsw-font-s-14); color: var(--dsw-alias-label-secondary); }
+.appId { margin-left: 4px; font-size: 12px; color: var(--dsw-alias-label-tertiary); }
+.empty { margin: 0; font: var(--dsw-font-s-14); color: var(--dsw-alias-label-secondary); }
+
+.list { display: flex; flex-direction: column; gap: 8px; }
+.chatRow { display: flex; flex-direction: column; gap: 2px; padding: 8px 10px; border: 0.5px solid var(--dsw-alias-border-l2); border-radius: var(--dsw-radius-md); }
+.chatHead { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.chatId { font-size: 11px; color: var(--dsw-alias-label-dimmed); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dim { color: var(--dsw-alias-label-tertiary); font: var(--dsw-font-xxs-12); }
+.sessRow { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.sessTitle { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; line-height: 1.5; color: var(--dsw-alias-label-primary); }
+.sessPast { color: var(--dsw-alias-label-tertiary); }
+.actBtn { display: inline-flex; align-items: center; gap: 4px; height: 26px; padding: 0 8px; border: none; border-radius: var(--dsw-radius-sm); background: transparent; font-size: 12px; color: var(--dsw-alias-label-secondary); cursor: pointer; }
+.actBtn:hover:not(:disabled) { background: var(--dsw-alias-interactive-bg-hover); color: var(--dsw-alias-label-primary); }
+
+@container (max-width: 700px) { .root { padding: 24px 16px; } }

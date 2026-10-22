@@ -1,0 +1,16 @@
+/* container: 正文列宽才是「窄不窄」的真相——DSH 左栏与右栏各吃一块，视口宽度对不上。
+   容器必须匿名（不带名字）：esbuild 的 css-modules 会把容器名按文件各自哈希，声明与跨文件的
+   @container 名字永远对不上，断点全空转；匿名查询匹配最近容器祖先即本根。右栏 / 弹窗都挂在
+   .root 之外，不受 containment 影响 */
+.root { container-type: inline-size; outline: none; height: 100%; display: flex; flex-direction: column; background: var(--dsw-alias-bg-base); color: var(--dsw-alias-label-primary); font: var(--dsw-font-s-14); }
+.main { flex: 1; min-height: 0; }
+.empty { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; background: var(--dsw-alias-bg-base); color: var(--dsw-alias-label-primary); font: var(--dsw-font-s-14); }
+.emptyTitle { font: var(--dsw-font-base-16); font-weight: 600; }
+.empty .muted { max-width: 420px; text-align: center; line-height: 1.6; }
+.muted { color: var(--dsw-alias-label-secondary); font: var(--dsw-font-xxs-12); }
+.notice { flex-shrink: 0; padding: 5px 16px; text-align: center; color: var(--dsw-alias-label-secondary); font: var(--dsw-font-xxs-12); border-bottom: 1px solid var(--dsw-alias-border-l1); }
+
+/* tab 的常驻 pane：占满 .main；不写 display（别盖过 hidden 属性的 UA display:none） */
+.pane { height: 100%; min-height: 0; }
+/* 正文层（图谱视图开着时 hidden 藏、保活不卸载）与图谱层同栈：各占满 pane */
+.doc { height: 100%; min-height: 0; }
