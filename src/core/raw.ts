@@ -22,7 +22,9 @@ function kindOf(name: string): RawKind {
 const byName = (a: TreeNode, b: TreeNode) => a.name.localeCompare(b.name, 'zh')
 
 // 文件夹在前、文件在后；document/ 下的日期文件夹新的在前；
-// 书目录 raw/book/<书名>/ 的 <书名>.md 归位为书目录自己（只认书目录）；图片与 .gitkeep 不列（图片在章节 md 里显示）
+// 书目录 raw/book/<书名>/ 与文章文件夹 raw/document/<日期>/<文章名>/ 的同名 md 归位为目录自己；
+// 图片与 .gitkeep 不列（图片在章节 md 里显示）
+const DIR_MERGE = /^(?:raw\/book|raw\/document\/\d{4}-\d{2}-\d{2})$/
 function walk(dir: string, rel: string): TreeNode[] {
   let entries: fs.Dirent[]
   try { entries = fs.readdirSync(path.join(dir, rel), { withFileTypes: true }) } catch { return [] }
@@ -34,7 +36,7 @@ function walk(dir: string, rel: string): TreeNode[] {
     const child = rel + '/' + name
     if (e.isDirectory()) {
       const kids = walk(dir, child)
-      const idx = rel === 'raw/book' ? kids.findIndex((k) => !k.dir && k.path === child + '/' + name + '.md') : -1
+      const idx = DIR_MERGE.test(rel) ? kids.findIndex((k) => !k.dir && k.path === child + '/' + name + '.md') : -1
       const index = idx === -1 ? null : kids.splice(idx, 1)[0]
       if (!kids.length && !index) continue
       const count = kids.reduce((n, k) => n + (k.dir ? k.count + (k.path ? 1 : 0) : 1), 0)

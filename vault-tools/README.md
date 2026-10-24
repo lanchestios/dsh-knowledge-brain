@@ -131,7 +131,7 @@ vault 侧另有（不在本目录、永不随插件走）：`wiki.json` 五区�
 - **相对地址用 `absolutize(md, base)` 补全**，它走 `urljoin`。`images/x.png` 相对页面所在目录，拼字符串会拼错。
 - **`class` 按空格分词匹配**，`paperBody deep` 也要认。收 meta 用 HTMLParser，`_meta()` 的正则认不出 `content = 'x'` 这种带空格的写法。
 - **认不出的 host 直接报错**，不做通用兜底，质量不明的东西不进 `raw/`。转载域名可 `--type wechat` 强制指定。
-- 图片下到该篇 `raw/document/<日期>/<名>/images/NN.png`，正文从仓库根写 `raw/…`。单张失败在原位留 `<!-- 图片下载失败: url -->`，不中断整篇。
+- 一篇 = `raw/document/<日期>/<文章名>/` 一个文件夹：md 在里面，图片下到该文件夹 `images/NN.png`，正文相对引用（`images/NN.png`）。单张失败在原位留 `<!-- 图片下载失败: url -->`，不中断整篇。
 - 归档文件抬头带 `源类型` 和 `适配器` 两行，站点改版时据此回查。
 
 ## pre-commit hook

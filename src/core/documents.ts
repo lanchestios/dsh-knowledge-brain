@@ -3,7 +3,7 @@ import path from 'node:path'
 import { refOf, type Model } from './model'
 import type { Document, DocumentStatus } from './api'
 
-// 文档（raw/document/<日期>/ 下的文件）的两层状态：
+// 文档（raw/document/<日期>/ 下的文件，一篇 = 一个文章文件夹）的两层状态：
 // 引用 = 沉淀区页的 source 精确含该路径；显式状态 = .wiki/coverage.conf。
 const nfc = (s: string) => s.normalize('NFC')
 const list = (abs: string) => { try { return fs.readdirSync(abs, { withFileTypes: true }) } catch { return [] } }
@@ -30,14 +30,24 @@ export function loadDocuments(m: Model): Document[] {
   }
   const cov = loadCoverage(m.dir)
   const out: Document[] = []
-  // 文档内容线只扫 raw/document。
+  // 文档内容线只扫 raw/document。一篇 = 日期目录下一个文件夹（md 与 images/ 同住）；
+  // images/ 里的图不是素材；直接躺在日期目录下的散文件也认（手放或旧布局遗留）。
   const kind = 'document'
   const root = path.join(m.dir, 'raw', kind)
   for (const e of list(root).filter((x) => x.isDirectory() && /^\d{4}-\d{2}-\d{2}$/.test(x.name))) {
-    for (const f of list(path.join(root, e.name)).filter((x) => x.isFile() && x.name !== '.gitkeep')
-      .sort((a, b) => a.name.localeCompare(b.name, 'zh'))) {
+    const day = path.join(root, e.name)
+    const entries: { seg: string; name: string }[] = []
+    for (const x of list(day)) {
+      if (x.name === '.gitkeep') continue
+      if (x.isDirectory()) {
+        if (x.name === 'images') continue
+        for (const f of list(path.join(day, x.name)))
+          if (f.isFile() && f.name !== '.gitkeep') entries.push({ seg: x.name, name: f.name })
+      } else if (x.isFile()) entries.push({ seg: '', name: x.name })
+    }
+    for (const f of entries.sort((a, b) => a.name.localeCompare(b.name, 'zh'))) {
       const name = nfc(f.name)
-      const rel = `raw/${kind}/${e.name}/${name}`
+      const rel = `raw/${kind}/${e.name}/${f.seg ? f.seg + '/' : ''}${name}`
       const by = cited.get(rel) ?? []
       const c = cov.get(rel) ?? {}
       const grade = c.material_status

@@ -77,3 +77,18 @@ test('素材树：书目录的同名 md 归位成目录自己；日期目录里�
     assert.ok(day.children.some((k) => k.path === 'raw/document/2026-10-01/2026-10-01.md'));
   } finally { fs.rmSync(d, { recursive: true, force: true }) }
 });
+
+test('素材树：文章文件夹的同名 md 归位成文件夹自己，images 不列', () => {
+  const d = fs.mkdtempSync(path.join(os.tmpdir(), 'wk-rawtree-'));
+  try {
+    fs.mkdirSync(path.join(d, 'raw', 'document', '2026-10-24', '文章甲', 'images'), { recursive: true });
+    fs.writeFileSync(path.join(d, 'raw', 'document', '2026-10-24', '文章甲', '文章甲.md'), '# 文章甲\n\n![](images/01.png)');
+    fs.writeFileSync(path.join(d, 'raw', 'document', '2026-10-24', '文章甲', 'images', '01.png'), 'png');
+    const t = rawTree(d);
+    const folder = t.children.find((n) => n.name === 'document')
+      .children.find((n) => n.name === '2026-10-24')
+      .children.find((n) => n.name === '文章甲');
+    assert.equal(folder.path, 'raw/document/2026-10-24/文章甲/文章甲.md');
+    assert.deepEqual(folder.children, [], '归位后 md 不再作为子项，图片本来就不列');
+  } finally { fs.rmSync(d, { recursive: true, force: true }) }
+});

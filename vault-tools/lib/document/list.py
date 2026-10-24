@@ -41,8 +41,19 @@ def raw(root: Path, day=None, pending=False) -> int:
     rows = []       # (目录日, 文件名, 状态, 时刻, 引它的页数)
     total = done = rated = n_full = 0
     for d in days:
-        # 只列文件：日期目录下还有该篇的 images/ 图目录（素材图随素材走），不是素材
-        for f in sorted(x for x in d.iterdir() if x.name != ".gitkeep" and x.is_file()):
+        # 一篇 = 日期目录下一个文件夹（md 与 images/ 同住其中），images/ 里的图不是素材；
+        # 直接躺在日期目录下的散文件也列（手放或旧布局遗留）
+        files = []
+        for x in d.iterdir():
+            if x.name == ".gitkeep":
+                continue
+            if x.is_dir():
+                if x.name == "images":
+                    continue
+                files += [c for c in x.iterdir() if c.is_file() and c.name != ".gitkeep"]
+            else:
+                files.append(x)
+        for f in sorted(files):
             r = repo.rel(root, f)
             by = cited.get(r, [])
             c = repo.coverage_for(cov, r).get("material_status")

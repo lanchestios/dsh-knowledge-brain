@@ -12,7 +12,7 @@
 
 | 用户要 | 怎么做 | 闭环的样子 |
 |---|---|---|
-| 一篇文章 | 拿到链接 → `./.wiki/bin/wiki document fetch <url>`，把归档路径贴给用户 | 素材落在 `raw/document/<今天>/`，「知识探索」的素材卡出现。顺势问一句要不要当场沉淀；要，就走 `wiki-write` 的「学一篇文章」场景（落 `知识/`） |
+| 一篇文章 | 拿到链接 → `./.wiki/bin/wiki document fetch <url>`，把归档路径贴给用户 | 素材落在 `raw/document/<今天>/<文章名>/`（md 与 images/ 同住），「知识探索」的素材卡出现。顺势问一句要不要当场沉淀；要，就走 `wiki-write` 的「学一篇文章」场景（落 `知识/`） |
 | 一本书 | `wiki book new <书名>` 建进度页，把 pdf / epub / azw3 / mobi 放进书目录，再按 [wiki-write-book-ingest](../wiki-write-book-ingest/SKILL.md) 走完转文本、补图、梳理、质检；纸质书 `wiki book status <书名> unavailable` | 「知识探索」的书架出现这本书，质检通过后显示「可读」 |
 | 一场会议 | 素材已在 `raw/` 或人手里（听录/纪要）→ 走 `wiki-write` 的「沉淀一次会议、听录、分享」场景（落 `经历/观察/YYYY-MM/`） | 「经历」区出现这页观察文档 |
 | 一个主题 | 走 `wiki-write` 的「学一篇文章或主题」场景（落 `知识/`），把主题给它 | 产出第一页 draft，「知识沉淀」看板不再全零 |

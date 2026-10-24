@@ -248,7 +248,8 @@ def is_document_date_dir(r: str) -> bool:
 # 显示不出——图在 DSH 插件里看。旧的 `../asset/…` 写法故意不认：漏迁的页引的图
 # 会变成「没人引用」被 check 报出来——正是想要的响声。
 # 素材图不进 asset/，随素材走：书图 raw/book/<书名>/images/（章节相对引用
-# ../images/…，见 book_image_ref），文档图 raw/document/<日期>/<名>/images/（正文仓库根 raw/…）。
+# ../images/…，见 book_image_ref），文档一篇 = raw/document/<日期>/<文章名>/ 一个
+# 文件夹，md 与 images/ 同住其中，正文相对引用（images/…）。
 # 五区要引的图只放 asset/，指 raw/ 由 check 报错——素材与沉淀分离。
 ASSET_REF_RE = re.compile(rf"\]\(({ASSET}/[^)\s]+)\)")
 # 嵌入件 ![](asset/….html?h=560)：与图片同写法，asset/ 下的 html 在 DSH 里嵌成可交互页，不算双链。

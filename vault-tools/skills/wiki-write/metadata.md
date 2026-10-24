@@ -12,7 +12,7 @@ title: 库存系统架构设计
 description: 库存链路的分层与关键取舍
 tags: [架构设计, 交易链路]
 source:
-  - raw/document/2026-09-06/评审纪要.pdf
+  - raw/document/2026-09-06/评审纪要/评审纪要.pdf
 status: stable
 generated: {by: claude, at: 2026-09-06T09:12:00Z}
 verified:

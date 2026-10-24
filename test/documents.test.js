@@ -27,3 +27,20 @@ test('loadDocuments：只列 raw/document，raw/listen 全部留在耳闻', () =
     assert.ok(rows.every((r) => r.status === 'unprocessed'))
   } finally { fs.rmSync(dir, { recursive: true, force: true }) }
 })
+
+test('loadDocuments：文章文件夹里的 md 是素材，images/ 里的图不是，散文件照列', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'wk-mat-'))
+  try {
+    const put = (p, text = 'x') => { fs.mkdirSync(path.dirname(path.join(dir, p)), { recursive: true }); fs.writeFileSync(path.join(dir, p), text) }
+    put('raw/document/2026-09-30/文章甲/文章甲.md', '正文 ![](images/01.png)')
+    put('raw/document/2026-09-30/文章甲/images/01.png', Buffer.from('89504e47', 'hex'))
+    put('raw/document/2026-09-30/报告.pdf')
+    const rows = loadDocuments(fakeModel(dir))
+    const paths = rows.map((r) => r.path)
+    assert.ok(paths.includes('raw/document/2026-09-30/文章甲/文章甲.md'), '文件夹里的 md 列出')
+    assert.ok(paths.includes('raw/document/2026-09-30/报告.pdf'), '日期目录下的散文件照列')
+    assert.ok(!paths.some((p) => p.endsWith('.png')), '图片不是素材')
+    const md = rows.find((r) => r.path.endsWith('文章甲.md'))
+    assert.equal(md.name, '文章甲')
+  } finally { fs.rmSync(dir, { recursive: true, force: true }) }
+})

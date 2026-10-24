@@ -63,7 +63,7 @@ def _check_top(root, out):
     读者和工具都不知道它算素材、附件还是正文。
     违规怎么改：
       - 缺固定目录 → 建出这个空目录（`mkdir <名>`），空着也合法。
-      - 多余条目 → 判断它是什么再挪：别人写的原件进 raw/document/<日期>/（`wiki document add`），
+      - 多余条目 → 判断它是什么再挪：别人写的原件进 raw/document/<日期>/<名>/（`wiki document add`），
         图片等附件进 asset/，自己写的正文挪进五区合适的位置（`wiki page new` 建页再搬内容），
         不需要的删掉。`.` 开头的工具目录不归这条管。
     """

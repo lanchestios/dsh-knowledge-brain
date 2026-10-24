@@ -21,9 +21,9 @@ wiki page verify <路径> [--by <身份>]  追加一条人工确认
 wiki page anchor <路径...>       锚点校验
 wiki page tags [标签] | orphans | unverified
 
-wiki document add <文件...>      素材移动进 raw/document/<今天>/（不是复制）
+wiki document add <文件...>      素材移动进 raw/document/<今天>/<名>/（不是复制；默认每份文件各进自己的文件夹，--name 归进同一文件夹）
 wiki document fetch <url> [--type <源>] [--node]
-                                抓网页：正文与图片都落 raw/（图在该篇 raw/document/<日期>/<名>/images/）；飞书默认整库，--node 只抓子树
+                                抓网页：一篇 = raw/document/<日期>/<文章名>/ 一个文件夹，md 与 images/ 同住（正文相对引 images/…）；飞书默认整库，--node 只抓子树
 wiki document list [日期] [--pending]
 wiki document cover <素材> [状态] 记录沉淀状态：processing / done；无状态 = 查询；--detail 写取用清单
 wiki document fidelity <素材> <页> 核对页有没有丢掉素材里的字段与取值

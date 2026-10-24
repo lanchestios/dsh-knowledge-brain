@@ -199,6 +199,18 @@ class TestListRawOutput(RawStatusBase):
         self.assertIn("甲.pdf", text)
         self.assertNotIn("乙.pdf", text)
 
+    def test_文章文件夹里的素材列出而_images_里的图不列(self):
+        """一篇 = 日期目录下的一个文件夹：md 在里面，images/ 里的图不是素材。"""
+        folder = self.root / repo.RAW / "document" / "2026-09-06" / "文章甲"
+        (folder / "images").mkdir(parents=True)
+        (folder / "文章甲.md").write_text("正文 ![](images/01.png)", encoding="utf-8")
+        (folder / "images" / "01.png").write_bytes(b"png")
+        self.commit()
+        _, text = self.run_raw()
+        line = [l for l in text.splitlines() if "文章甲.md" in l][0]
+        self.assertIn("未沉淀", line)
+        self.assertNotIn("01.png", text)
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

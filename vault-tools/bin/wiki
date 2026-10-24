@@ -45,9 +45,10 @@ page —— 沉淀页（经历 / 认知 / 学习 / 知识 / 系统）
   wiki page unverified       列还没被人工确认过的页
 
 document —— 素材（raw/document/）
-  wiki document add <文件...>  把本地文件移动（不是复制）进 raw/document/<今天>/
+  wiki document add <文件...> [--name <名>]
+                             把本地文件移动（不是复制）进 raw/document/<今天>/<名>/（默认每份文件各进自己的文件夹）
   wiki document fetch <url> [--type <源>] [--node]
-                             按源类型抓网页，正文与图片都落 raw/（图在该篇 raw/document/<日期>/<名>/images/）；
+                             按源类型抓网页：一篇 = raw/document/<日期>/<文章名>/ 一个文件夹，md 与 images/ 同住
                              飞书知识库默认整库抓，--node 只抓该节点及其子树
   wiki document list [日期] [--pending]
                              列素材，每份带到达时刻与沉淀状态；--pending 只列未评或沉淀中的
@@ -161,9 +162,10 @@ def _page(root, cmd, rest):
 def _document(root, cmd, rest):
     if cmd == "add":
         from document import add as document_add
+        rest, name = _take_opt(rest, "--name")
         if not rest:
-            return _usage("document add <文件...>")
-        return document_add.add_raw(root, rest)
+            return _usage("document add <文件...> [--name <文件夹名>]")
+        return document_add.add_raw(root, rest, name=name)
     if cmd == "fetch":
         from document import fetch as fetch_mod
         if "--type" in rest and rest.index("--type") + 1 >= len(rest):

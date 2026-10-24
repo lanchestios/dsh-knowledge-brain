@@ -165,21 +165,8 @@ class TestWeChatAdapter(unittest.TestCase):
             fetch.WeChatAdapter.parse("<html><body>什么都没有</body></html>")
 
 
-class TestSlugAndFilename(unittest.TestCase):
-    """标题 → 目录名 / 文件名。"""
-
-    def test_slug_去掉空格和标点只留中英数(self):
-        self.assertEqual(fetch.slugify("了解下 OKF — Open Knowledge Format（开放知识格式）"),
-                         "了解下OKFOpenKnowledgeFormat开放知识格式")
-
-    def test_slug_保留中英数(self):
-        self.assertEqual(fetch.slugify("Hello 世界 2026!"), "Hello世界2026")
-
-    def test_slug_截断到四十字(self):
-        self.assertEqual(len(fetch.slugify("字" * 100)), 40)
-
-    def test_slug_全是标点时退回默认名(self):
-        self.assertEqual(fetch.slugify("！！！"), "untitled")
+class TestFilename(unittest.TestCase):
+    """标题 → 文件名。文件名同时就是文章文件夹名，md 与 images/ 住在一起。"""
 
     def test_文件名去掉路径非法字符(self):
         self.assertEqual(fetch.safe_filename("a/b:c*d?e"), "abcde")
@@ -473,11 +460,11 @@ class TestImages(unittest.TestCase):
     def test_扩展名都取不到时退回_png(self):
         self.assertEqual(fetch.ext_for("https://e.com/640", None), ".png")
 
-    def test_改写成仓库根起的本地路径(self):
-        """落进正文的是仓库根起的路径，不带 `../`（理由见 repo.ASSET_REF_RE）。"""
+    def test_改写成相对本篇_images_的路径(self):
+        """md 与 images/ 同住一个文件夹，正文里相对引用（解析仓按文档目录归一，见 render.assetRel）。"""
         md = "![](https://e.com/a.png)"
-        got = fetch.rewrite_images(md, {"https://e.com/a.png": "raw/document/2026-09-06/x/images/01.png"})
-        self.assertEqual(got, "![](raw/document/2026-09-06/x/images/01.png)")
+        got = fetch.rewrite_images(md, {"https://e.com/a.png": "images/01.png"})
+        self.assertEqual(got, "![](images/01.png)")
 
     def test_没下下来的图片原位留注释而不是断链(self):
         md = "上\n![](https://e.com/a.png)\n下"
@@ -491,8 +478,8 @@ class TestImages(unittest.TestCase):
 
     def test_改写保留_alt(self):
         md = "![一张图](https://e.com/a.png)"
-        got = fetch.rewrite_images(md, {"https://e.com/a.png": "raw/document/2026-09-06/x/images/01.png"})
-        self.assertEqual(got, "![一张图](raw/document/2026-09-06/x/images/01.png)")
+        got = fetch.rewrite_images(md, {"https://e.com/a.png": "images/01.png"})
+        self.assertEqual(got, "![一张图](images/01.png)")
 
     def test_带_alt_的图片没下下来同样留注释(self):
         md = "![一张图](https://e.com/a.png)"
@@ -535,7 +522,7 @@ class TestRender(unittest.TestCase):
 
 
 class TestPaths(unittest.TestCase):
-    """落盘位置：raw/document/<日期>/，图在该篇 raw/document/<日期>/<名>/images/。"""
+    """落盘位置：raw/document/<日期>/<文章名>/，md 与 images/ 同住一个文件夹。"""
 
     def setUp(self):
         self.tmp = tempfile.mkdtemp()
@@ -546,16 +533,20 @@ class TestPaths(unittest.TestCase):
         shutil.rmtree(self.tmp)
 
     def test_图片编号从零一开始且补零(self):
-        _, rel = fetch.image_dest(self.root, "2026-09-06", "文章", 0, ".png")
-        self.assertEqual(rel, "raw/document/2026-09-06/文章/images/01.png")
+        abs_path, rel = fetch.image_dest(self.root, "2026-09-06", "文章", 0, ".png")
+        self.assertEqual(rel, "images/01.png")
+        self.assertEqual(abs_path.relative_to(self.root),
+                         Path("raw/document/2026-09-06/文章/images/01.png"))
 
     def test_第十一张图片编号不补零溢出(self):
-        _, rel = fetch.image_dest(self.root, "2026-09-06", "文章", 10, ".jpg")
-        self.assertEqual(rel, "raw/document/2026-09-06/文章/images/11.jpg")
+        abs_path, rel = fetch.image_dest(self.root, "2026-09-06", "文章", 10, ".jpg")
+        self.assertEqual(rel, "images/11.jpg")
+        self.assertEqual(abs_path.relative_to(self.root),
+                         Path("raw/document/2026-09-06/文章/images/11.jpg"))
 
-    def test_归档写进当天的素材目录并返回相对路径(self):
+    def test_归档写进文章同名文件夹并返回相对路径(self):
         rel = fetch.archive(self.root, "2026-09-06", "了解下 OKF", "正文内容\n")
-        self.assertEqual(rel, "raw/document/2026-09-06/了解下 OKF.md")
+        self.assertEqual(rel, "raw/document/2026-09-06/了解下 OKF/了解下 OKF.md")
         self.assertEqual((self.root / rel).read_text(encoding="utf-8"), "正文内容\n")
 
     def test_归档不覆盖同名素材(self):
@@ -565,7 +556,7 @@ class TestPaths(unittest.TestCase):
 
     def test_归档时标题里的斜杠不会被当成子目录(self):
         rel = fetch.archive(self.root, "2026-09-06", "a/b", "x")
-        self.assertEqual(rel, "raw/document/2026-09-06/ab.md")
+        self.assertEqual(rel, "raw/document/2026-09-06/ab/ab.md")
 
 
 class TestContentBoundary(unittest.TestCase):
@@ -1067,7 +1058,7 @@ class TestGitHubAdapter(unittest.TestCase):
         self.assertTrue(
             fetch.archive_path("2026-01-01",
                                fetch.GitHubAdapter.title_for("pi", "docs/x.md"))
-            .endswith("pi · docs · x.md"))
+            .endswith("pi · docs · x/pi · docs · x.md"))
         self.assertEqual(fetch.GitHubAdapter.title_for("pi", "docs/X.MARKDOWN"),
                          "pi · docs · X")
 

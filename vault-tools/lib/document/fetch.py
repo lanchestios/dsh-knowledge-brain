@@ -1,4 +1,4 @@
-"""wiki document fetch —— 按源类型抓取网页，正文落 raw/document/，图片落该篇 raw/document/<日期>/<名>/images/。
+"""wiki document fetch —— 按源类型抓取网页，一篇 = raw/document/<日期>/<文章名>/ 一个文件夹，md 与 images/ 同住其中。
 
 源类型由 ADAPTERS 决定：每个适配器认自己的 host、自己抽元数据和正文。
 认不出的 host 直接报错，不做"通用兜底"——宁可明确失败，也不要静默把一篇
@@ -1762,14 +1762,11 @@ def pick_adapter(url, forced=None):
 _FILENAME_BAD = r'[/\\:*?"<>|\x00-\x1f]'
 
 
-def slugify(title, limit=40):
-    """标题 → 目录名：只留中英数，截断。用作 raw/document/<日期>/ 下该篇的图片目录名。"""
-    s = "".join(c for c in (title or "") if c.isalnum())
-    return s[:limit] or "untitled"
-
-
 def safe_filename(title):
-    """标题 → 文件名：只去掉路径非法字符，其余原样保留可读性。"""
+    """标题 → 文件名：只去掉路径非法字符，其余原样保留可读性。
+
+    也是文章文件夹名：md 与 images/ 住在 raw/document/<日期>/<文章名>/ 下。
+    """
     return re.sub(_FILENAME_BAD, "", title or "").strip() or "untitled"
 
 
@@ -1825,8 +1822,8 @@ def ext_for(url, content_type=None):
 def rewrite_images(md, mapping):
     """把正文里的原始图片地址换成本地路径；值为 None 表示没下下来。
 
-    mapping 里是仓库根起的路径（image_dest 给的），原样落进正文——
-    图片一律仓库根起引，理由见 repo.py 素材图随素材走的注释。
+    mapping 里是相对该篇 md 的路径（image_dest 给的，images/…）：md 与
+    images/ 同住一个文件夹，解析仓会按文档目录归一成库内路径。
     """
     def sub(m):
         u = m.group("url")
@@ -1861,19 +1858,20 @@ def render(article, adapter, url, body_md, fetched_on):
 
 # ── 落盘 ────────────────────────────────────────────────────
 
-def image_dest(root, day, slug, index, ext):
-    """第 index 张图的绝对路径与仓库根起的相对路径。素材图随素材走，落在该篇自己的 images/ 下。"""
-    rel_path = f"raw/document/{day}/{slug}/images/{index + 1:02d}{ext}"
-    return Path(root) / rel_path, rel_path
+def image_dest(root, day, name, index, ext):
+    """第 index 张图的绝对路径与写进正文的相对路径。素材图随素材走，落在该篇自己的 images/ 下。"""
+    rel_path = f"images/{index + 1:02d}{ext}"
+    return Path(root) / "raw" / "document" / day / name / "images" / f"{index + 1:02d}{ext}", rel_path
 
 
 def archive_path(day, title):
     """归档件在仓库里的位置。抽出来是因为正文改写要先知道页落在哪一层。"""
-    return f"raw/document/{day}/{safe_filename(title)}.md"
+    name = safe_filename(title)
+    return f"raw/document/{day}/{name}/{name}.md"
 
 
 def archive(root, day, title, text):
-    """把正文写进 raw/document/<day>/，返回仓库根起的相对路径。"""
+    """把正文写进 raw/document/<day>/<文章名>/，返回仓库根起的相对路径。"""
     rel_path = archive_path(day, title)
     target = Path(root) / rel_path
     target.parent.mkdir(parents=True, exist_ok=True)
@@ -1918,7 +1916,7 @@ def _http_get(url, timeout=30):
 
 def _save_one(root, out, adapter, article, url, day):
     """一篇文章：取正文 → 下图 → 归档。返回归档路径，已存在或失败则 None。"""
-    rel_target = f"raw/document/{day}/{safe_filename(article.title)}.md"
+    rel_target = archive_path(day, article.title)
     if (Path(root) / rel_target).exists():
         out.err(f"目标已存在：{rel_target}（raw/ 只进不改，要重抓请先手动删）")
         return None
@@ -1937,13 +1935,13 @@ def _save_one(root, out, adapter, article, url, day):
 
     # 源站的图片要鉴权时（飞书），用适配器自己的取法
     getter = getattr(adapter, "image_get", None) or _http_get
-    slug = slugify(article.title)
+    name = safe_filename(article.title)
     urls = image_urls(body)
     mapping, ok_n = {}, 0
     for i, u in enumerate(urls):
         try:
             data, ct = getter(u)
-            dest, rel_img = image_dest(root, day, slug, i, ext_for(u, ct))
+            dest, rel_img = image_dest(root, day, name, i, ext_for(u, ct))
             dest.parent.mkdir(parents=True, exist_ok=True)
             dest.write_bytes(data)
             mapping[u], ok_n = rel_img, ok_n + 1
@@ -1951,7 +1949,7 @@ def _save_one(root, out, adapter, article, url, day):
             out.warn(f"第 {i + 1} 张图片下载失败，正文留注释：{e}")
             mapping[u] = None
     if urls:
-        out.ok(f"下载 {ok_n}/{len(urls)} 张图片 → raw/document/{day}/{slug}/images/")
+        out.ok(f"下载 {ok_n}/{len(urls)} 张图片 → raw/document/{day}/{name}/images/")
 
     rel_path = archive(root, day, article.title,
                        render(article, adapter, url,
