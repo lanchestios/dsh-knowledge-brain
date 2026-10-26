@@ -1,0 +1,107 @@
+/* Plugin-owned theme. Only --wk-* names are published; no host tokens or resets. */
+body {
+  --wk-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --wk-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --wk-background: #ffffff;
+  --wk-foreground: #242424;
+  --wk-primary: #3567d4;
+  --wk-primary-foreground: #ffffff;
+  --wk-secondary: #f1f2f4;
+  --wk-secondary-foreground: #45474b;
+  --wk-muted-foreground: #666a73;
+  --wk-accent: #eef0f3;
+  --wk-border: #d5d8de;
+  --wk-popover: #ffffff;
+  --wk-destructive: #c73535;
+  --wk-success: #247549;
+  --wk-warning: #8b620d;
+  --wk-radius-xs: 3px;
+  --wk-radius-sm: 4px;
+  --wk-radius-md: 8px;
+  --wk-focus-ring-width: 2px;
+  --wk-focus-ring-color: var(--wk-primary);
+  --wk-shadow-lv3: 0 8px 28px rgb(0 0 0 / 18%);
+  --wk-font-xxs-12: 12px/1.5 var(--wk-font-family);
+  --wk-font-s-12: 12px/1.5 var(--wk-font-family);
+  --wk-font-xs-13: 13px/1.5 var(--wk-font-family);
+  --wk-font-s-14: 14px/1.5 var(--wk-font-family);
+  --wk-font-base-16: 16px/1.5 var(--wk-font-family);
+  --wk-font-l-20: 20px/1.5 var(--wk-font-family);
+  --wk-font-xl-24: 24px/1.5 var(--wk-font-family);
+  --wk-font-markdown-base: 14px/24px var(--wk-font-family);
+  --wk-font-markdown-table: 14px/1.7 var(--wk-font-family);
+  --wk-font-markdown-h1: 700 21px/30px var(--wk-font-family);
+  --wk-font-markdown-h2: 700 19px/28px var(--wk-font-family);
+  --wk-font-markdown-h3: 700 18px/26px var(--wk-font-family);
+  --wk-font-markdown-h4: 600 14px/24px var(--wk-font-family);
+  --wk-font-markdown-code-block: 13px/1.6 var(--wk-font-mono);
+  --wk-alias-label-primary: var(--wk-foreground);
+  --wk-alias-text-primary: var(--wk-foreground);
+  --wk-alias-label-secondary: var(--wk-secondary-foreground);
+  --wk-alias-text-secondary: var(--wk-secondary-foreground);
+  --wk-alias-label-tertiary: var(--wk-muted-foreground);
+  --wk-alias-label-caption: var(--wk-muted-foreground);
+  --wk-alias-label-dimmed: var(--wk-muted-foreground);
+  --wk-alias-label-reverse: var(--wk-background);
+  --wk-alias-bg-base: var(--wk-background);
+  --wk-alias-bg: var(--wk-background);
+  --wk-alias-bg-layer-1: #fafafa;
+  --wk-alias-bg-layer-2: #f5f6f7;
+  --wk-alias-bg-layer-3: var(--wk-popover);
+  --wk-alias-bg-reverse: var(--wk-foreground);
+  --wk-alias-border-l1: #ebedf0;
+  --wk-alias-border-l2: #e2e5e9;
+  --wk-alias-border-l3: #daddE3;
+  --wk-alias-border-l4: var(--wk-border);
+  --wk-alias-border: var(--wk-border);
+  --wk-alias-interactive-bg-hover: var(--wk-accent);
+  --wk-alias-bg-interactive-hover: var(--wk-accent);
+  --wk-alias-fill-hover: var(--wk-accent);
+  --wk-alias-interactive-bg-active: #e3e8f3;
+  --wk-alias-fill-secondary: var(--wk-secondary);
+  --wk-alias-state-business-primary: var(--wk-primary);
+  --wk-alias-brand-primary: var(--wk-primary);
+  --wk-alias-link: var(--wk-primary);
+  --wk-alias-state-error-primary: var(--wk-destructive);
+  --wk-alias-state-danger-primary: var(--wk-destructive);
+  --wk-alias-danger: var(--wk-destructive);
+  --wk-alias-state-success-primary: var(--wk-success);
+  --wk-alias-state-warn-primary: var(--wk-warning);
+  --wk-alias-button-primary-bg: var(--wk-primary);
+  --wk-alias-button-primary-text: var(--wk-primary-foreground);
+  --wk-alias-markdown-inline-code: #f0f1f3;
+  --wk-alias-markdown-code-block: #f6f7f9;
+  --wk-specific-sidebar-fill: #fafafa;
+  --wk-specific-menu: var(--wk-popover);
+}
+body[data-ds-dark-theme] {
+  --wk-background: #202124;
+  --wk-foreground: #e8eaed;
+  --wk-primary: #91b1ff;
+  --wk-primary-foreground: #182b52;
+  --wk-secondary: #303237;
+  --wk-secondary-foreground: #c0c4cd;
+  --wk-muted-foreground: #a2a7b1;
+  --wk-accent: #34373d;
+  --wk-border: #51555d;
+  --wk-popover: #292b30;
+  --wk-destructive: #ff9292;
+  --wk-success: #79d3a0;
+  --wk-warning: #ebc875;
+  --wk-alias-bg-layer-1: #25272b;
+  --wk-alias-bg-layer-2: #2d3035;
+  --wk-alias-border-l1: #34373d;
+  --wk-alias-border-l2: #3d4149;
+  --wk-alias-border-l3: #474c55;
+  --wk-alias-interactive-bg-active: #35435f;
+  --wk-alias-markdown-inline-code: #34373d;
+  --wk-alias-markdown-code-block: #272a2f;
+  --wk-specific-sidebar-fill: #25272b;
+}
+/* 阅读器自己的少量变量：间距 + 四区配色（区色原是 wiki-app 的 --area-*） */
+body { --wk-gap: 12px; --wk-pad: 16px; --wk-row: 28px;
+  --wk-area-认知: oklch(0.6 0.16 300); --wk-area-学习: oklch(0.68 0.15 65); --wk-area-知识: oklch(0.58 0.15 250); --wk-area-工作: oklch(0.6 0.13 160);
+  --wk-mark: oklch(0.9 0.12 95 / 0.7); }
+body[data-ds-dark-theme] {
+  --wk-area-认知: oklch(0.72 0.14 300); --wk-area-学习: oklch(0.78 0.13 65); --wk-area-知识: oklch(0.72 0.13 250); --wk-area-工作: oklch(0.74 0.12 160);
+  --wk-mark: oklch(0.75 0.14 90 / 0.3); }

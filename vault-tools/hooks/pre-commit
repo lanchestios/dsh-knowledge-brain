@@ -1,0 +1,7 @@
+#!/bin/sh
+# 提交前：刷新 updated 字段，然后校验结构。
+# 安装： ln -sf <包根>/vault-tools/hooks/pre-commit .git/hooks/pre-commit（插件打开库时自动装）
+set -e
+ROOT="$(git rev-parse --show-toplevel)"
+"$ROOT/.wiki/bin/wiki" stamp
+"$ROOT/.wiki/bin/wiki" check

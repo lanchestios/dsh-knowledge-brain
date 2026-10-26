@@ -1,0 +1,38 @@
+/* Tailwind 4 utilities only: no Preflight, no host element reset. */
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme) prefix(wk);
+@import "tailwindcss/utilities.css" layer(utilities) prefix(wk);
+@source "..";
+@custom-variant dark (&:where(body[data-ds-dark-theme] *));
+
+@theme inline {
+  --font-sans: var(--wk-font-family);
+  --font-mono: var(--wk-font-mono);
+  --color-secondary-foreground: var(--wk-secondary-foreground);
+  --color-background: var(--wk-background);
+  --color-foreground: var(--wk-foreground);
+  --color-primary: var(--wk-primary);
+  --color-primary-foreground: var(--wk-primary-foreground);
+  --color-secondary: var(--wk-secondary);
+  --color-muted-foreground: var(--wk-muted-foreground);
+  --color-accent: var(--wk-accent);
+  --color-border: var(--wk-border);
+  --color-ring: var(--wk-primary);
+  --color-popover: var(--wk-popover);
+  --color-popover-foreground: var(--wk-foreground);
+  --color-destructive: var(--wk-destructive);
+  --color-success: var(--wk-success);
+  --color-warning: var(--wk-warning);
+}
+
+/* Only our controls receive the normalization normally supplied by Preflight. */
+:where([data-wiki-ui]) { box-sizing: border-box; font-family: var(--wk-font-family); line-height: 1.5; }
+:where(button[data-wiki-ui], input[data-wiki-ui]) { margin: 0; font-family: var(--wk-font-family); }
+:where(button[data-wiki-ui]) { cursor: pointer; }
+:where(button[data-wiki-ui]:disabled) { cursor: default; }
+
+/* Shared motion used by the Tailwind surface recipes. */
+@keyframes wk-components-homeview-wkRise { from { opacity: 0; transform: translateY(10px); } }
+@keyframes wk-components-launchpad-wkRise { from { opacity: 0; transform: translateY(8px); } }
+@keyframes wk-components-treepane-hold { to { transform: scaleX(1); } }
+@keyframes wk-settings-wikisettingscard-wkDirSpin { to { transform: rotate(360deg) } }

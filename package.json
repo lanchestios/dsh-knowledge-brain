@@ -1,0 +1,130 @@
+{
+  "name": "dsh-knowledge-brain",
+  "version": "0.1.5",
+  "description": "Personal wiki vault plugin for the DeepSeek Harness: read, search, and link-navigate an Obsidian-style knowledge base, with Typora-like editing and agent-side library tools",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lanchestios/dsh-knowledge-brain.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./locale/*.json": "./locale/*.json",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "licenses",
+    "assets/excalidraw",
+    "vault-tools",
+    "!vault-tools/**/__pycache__",
+    "cordis.patch.yml",
+    "locale/*.json"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web"
+    }
+  },
+  "scripts": {
+    "prepublishOnly": "node build.mjs --install",
+    "build": "node build.mjs",
+    "watch": "node build.mjs --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "~4.0.4",
+    "@deepseek-ai/dsh-llm": ">=0.2.1-rc.2 <0.2.2-0",
+    "@deepseek-ai/dsh-skill-filesystem": ">=0.2.1-rc.2 <0.2.2-0",
+    "@deepseek-ai/dsh-tools": ">=0.2.1-rc.2 <0.2.2-0",
+    "@deepseek-ai/schemastery": "~3.18.4"
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "~4.0.5",
+    "@deepseek-ai/dsh-llm": "0.2.1-rc.3",
+    "@deepseek-ai/dsh-skill-filesystem": "0.2.1-rc.3",
+    "@deepseek-ai/dsh-tools": "0.2.1-rc.3",
+    "@deepseek-ai/schemastery": "~3.18.5",
+    "@modelcontextprotocol/client": "2.0.0",
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/d3-force": "^3.0.10",
+    "@types/d3-selection": "^3.0.12",
+    "@types/d3-transition": "^3.0.9",
+    "@types/d3-zoom": "^3.0.8",
+    "@types/hast": "^3.0.5",
+    "@types/mdast": "^4.0.4",
+    "@types/node": "^24",
+    "@types/react": "~18.3.1",
+    "@types/react-dom": "~18.3.0",
+    "@types/ws": "^8.18.2",
+    "esbuild": "^0.25",
+    "lightningcss": "^1.30",
+    "postcss": "^8.5.31",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^7.0.2",
+    "vitest": "^3"
+  },
+  "dependencies": {
+    "@antv/infographic": "^0.2.20",
+    "@codemirror/commands": "^6.11.1",
+    "@codemirror/lang-markdown": "^6.5.2",
+    "@codemirror/language": "^6.12.4",
+    "@codemirror/state": "^6.7.6",
+    "@codemirror/view": "^6.43.13",
+    "@excalidraw/excalidraw": "^0.18.1",
+    "@larksuiteoapi/node-sdk": "^1.74.0",
+    "@lezer/common": "^1.5.3",
+    "@lezer/markdown": "^1.7.2",
+    "@modelcontextprotocol/server": "2.0.0",
+    "@shikijs/langs": "^4.4.3",
+    "@shikijs/rehype": "^4.4.3",
+    "@shikijs/themes": "^4.4.3",
+    "chokidar": "^4",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "cmdk": "^1.1.1",
+    "d3-force": "^3.0.0",
+    "d3-selection": "^3.0.0",
+    "d3-transition": "^3.0.1",
+    "d3-zoom": "^3.0.0",
+    "github-slugger": "^2.0.0",
+    "hast-util-to-string": "^3.0.1",
+    "jsdom": "^30.1.1",
+    "katex": "^0.18.9",
+    "mermaid": "^12.0.0",
+    "micromark-extension-cjk-friendly-util": "3.0.1",
+    "minisearch": "^7.2.0",
+    "radix-ui": "^1.8.1",
+    "rehype-katex": "^7.0.1",
+    "rehype-raw": "^7.0.0",
+    "rehype-sanitize": "^6.0.0",
+    "rehype-slug": "^6.0.0",
+    "rehype-stringify": "^10.0.1",
+    "remark-cjk-friendly": "^2.3.1",
+    "remark-cjk-friendly-gfm-strikethrough": "^2.3.1",
+    "remark-gfm": "^4.0.1",
+    "remark-math": "^6.0.0",
+    "remark-parse": "^11.0.0",
+    "remark-rehype": "^11.1.2",
+    "shiki": "^4.4.3",
+    "tailwind-merge": "^3.7.0",
+    "unified": "^11.0.5",
+    "unist-util-visit": "^5.1.0",
+    "ws": "^8.22.0",
+    "yaml": "^2.9.1",
+    "zod": "4.4.3"
+  }
+}

@@ -1,0 +1,3 @@
+/* Host 用 defaultColor:false 渲染，每个 token 带 --shiki-light / --shiki-dark */
+.shiki, .shiki span { color: var(--shiki-light); background-color: transparent; }
+body[data-ds-dark-theme] .shiki, body[data-ds-dark-theme] .shiki span { color: var(--shiki-dark); }

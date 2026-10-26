@@ -1,0 +1,308 @@
+#!/usr/bin/env python3
+"""wiki —— 格物致知 wiki 的结构工具。
+
+命名规则：全库命令直接跟在 wiki 后面（init / upgrade / check / tree / stamp）；
+对象命令先写作用域再写动作：wiki page|document|book <动作> …。
+"""
+
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "lib"))
+
+from core import repo  # noqa: E402
+
+USAGE = """用法： wiki <命令> [...]    （命令在库根跑：./.wiki/bin/wiki …）
+
+全库
+  wiki init --template minimal|preset [--json]
+                             在当前目录新建知识库：git、.wiki、七个固定目录、模板种子；
+                             多余顶层项挪进 .wiki/backup/init-<时间>/；已有的区不拷种子，只补齐
+  wiki init --plan [--json]   只看：有没有 git、会挪走哪些顶层项
+  wiki upgrade               库版本低于工具时逐级升级（lib/upgrade/steps/），改动留在工作区、不自动提交
+  wiki check                 只读校验：版本 / 顶层 / 编码 / 结构 / 骨架 / frontmatter / 引用 / 卫生 /
+                             文件夹配置 / 语法 / 围栏与公式；修法见 lib/check/check.py 各 _check_* 的「违规怎么改」
+  wiki tree [--write]        打印目录树（--write 写回 README）
+  wiki stamp [--all] [--by <身份>]
+                             刷新改过的 md：updated 刷成今天，generated.at 推到此刻
+
+page —— 沉淀页（经历 / 认知 / 学习 / 知识 / 系统）
+  wiki page new <路径> [标题] [--by <身份>]
+                             建沉淀页，自动判断平铺还是文件夹（父节点是平铺 md 会先 grow）
+  wiki page grow <文件>       平铺 X.md → X/X.md
+  wiki page shrink <文件夹>   反向收回
+  wiki page move <源> <目标> [--before <兄弟> | --after <兄弟> | --first]
+                             移动节点并自动修好 [[双链]]、source 与 .folder.json；位置不给排最后
+  wiki page order <节点> (--before <兄弟> | --after <兄弟> | --first | --last)
+                             同一文件夹内调先后（写 .folder.json 的 order）
+  wiki page mark <路径> <状态> 改 status：draft / stable / deprecated
+  wiki page verify <路径> [--by <身份>]
+                             人工确认一页，往 verified 追加一条事件
+  wiki page anchor <路径...>  锚点校验：页里的代码标识符必须能在钉死的基线 commit 里查到
+                             （基线见 .wiki/anchors.conf）
+  wiki page tags [标签]       无参列全部标签；带参列该标签下的页
+  wiki page orphans          列没人链、也没 source 的页
+  wiki page unverified       列还没被人工确认过的页
+
+document —— 素材（raw/document/）
+  wiki document add <文件...> [--name <名>]
+                             把本地文件移动（不是复制）进 raw/document/<今天>/<名>/（默认每份文件各进自己的文件夹）
+  wiki document fetch <url> [--type <源>] [--node]
+                             按源类型抓网页：一篇 = raw/document/<日期>/<文章名>/ 一个文件夹，md 与 images/ 同住
+                             飞书知识库默认整库抓，--node 只抓该节点及其子树
+  wiki document list [日期] [--pending]
+                             列素材，每份带到达时刻与沉淀状态；--pending 只列未评或沉淀中的
+  wiki document cover <素材> [processing|done] [--detail <清单>]
+                             记录素材沉淀状态；无状态 = 查询（台账 .wiki/coverage.conf）
+  wiki document fidelity <素材> <页>
+                             核对页有没有丢掉素材里的字段与取值
+
+
+book —— 书（raw/book/）
+  wiki book new <书名> [--by <身份>]
+                             建 raw/book/<书名>/ + 进度页（书名不带书名号）
+  wiki book split <书籍> <目录> 把 pdf / epub / azw3 / mobi 转成 md + 图片
+  wiki book read <书名> <章节>
+                             勾选章节，全勾完自动把 progress 置为「读完」
+  wiki book deposit <书名> <章节> [--done]
+                             知识沉淀：登记这一章沉淀中（须已读）；--done 标完成（只由人标）
+  wiki book status <书名> [<状态> [--error <说明>]]
+                             查 / 写入库状态：init / text / figures / proofread / readable / unavailable / failed；
+                             写 readable 当场跑 qc，没过拒写；--error 同时写 material_error（不给则非 failed 清掉；换行与连续空白压成一个空格）
+  wiki book cut <书名> <起始页>:<标题> ...
+                             PDF 转出的 1 全文.md 按页标记切章（页号是 PDF 页序），再 sync
+  wiki book sync <书名>     按 章节/<号> <标题>.md 重写章节清单（数字排序、保留 ### 分组行与已勾）
+  wiki book crop <页图> <x0,y0,x1,y1> <输出>
+                             从页图裁插图；四值都 ≤1 按比例，否则按像素
+  wiki book images <书名>     章节/images/ 的图搬进 raw/book/<书名>/images/，章节引用改成 ../images/ 相对路径（幂等）
+  wiki book qc <书名>       书级质检（章节清单 / 整理记录 / 乱码 / 图片 / md 语法），写 readable 前必过
+  wiki book list             列所有书及 progress、读过章数、沉淀中 / 完成章数
+
+身份
+  新建与确认都会记下 actor：--by 参数 > WIKI_ACTOR 环境变量 > human:<git user.name>
+"""
+
+_UNKNOWN = object()          # 作用域分派函数「不认识这条命令」的返回值（与任何退出码都不相等）
+SCOPES = ("page", "document", "book")
+TOP = ("upgrade", "check", "tree", "stamp")
+
+
+def _take_opt(rest, name):
+    """从参数里摘掉 --name <值>，返回剩下的参数和取到的值。"""
+    if name not in rest:
+        return rest, None
+    i = rest.index(name)
+    if i + 1 >= len(rest):
+        return rest[:i], None
+    return rest[:i] + rest[i + 2:], rest[i + 1]
+
+
+def _usage(text):
+    print(f"用法： wiki {text}")
+    return 2
+
+def _page(root, cmd, rest):
+    if cmd == "new":
+        from page import new as page_new
+        rest, by = _take_opt(rest, "--by")
+        if not rest:
+            return _usage("page new <路径> [标题] [--by <身份>]")
+        return page_new.new_node(root, rest[0], rest[1] if len(rest) > 1 else "", by=by)
+    if cmd in ("grow", "shrink"):
+        from page import restructure
+        if not rest:
+            return _usage(f"page {cmd} <路径>")
+        target = Path(rest[0]).resolve()
+        return restructure.grow(root, target) if cmd == "grow" else restructure.shrink(root, target)
+    if cmd in ("move", "order"):
+        from page import restructure
+        where, ref = None, None
+        for flag in ("--before", "--after"):
+            if flag in rest:
+                i = rest.index(flag)
+                if i + 1 >= len(rest):
+                    return _usage(f"page {cmd} … {flag} <兄弟>")
+                where, ref = flag[2:], rest[i + 1]
+                rest = rest[:i] + rest[i + 2:]
+        for flag in ("--first", "--last"):
+            if flag in rest:
+                where = flag[2:]
+                rest = [x for x in rest if x != flag]
+        if cmd == "move":
+            if len(rest) < 2 or where == "last":
+                return _usage("page move <源> <目标> [--before <兄弟> | --after <兄弟> | --first]")
+            return restructure.move(root, rest[0], rest[1], where=where, ref=ref)
+        if len(rest) != 1 or not where:
+            return _usage("page order <节点> (--before <兄弟> | --after <兄弟> | --first | --last)")
+        return restructure.order(root, rest[0], where, ref)
+    if cmd == "mark":
+        from page import mark as page_mark
+        if len(rest) < 2:
+            return _usage("page mark <路径> <draft|stable|deprecated>")
+        return page_mark.mark(root, rest[0], rest[1])
+    if cmd == "verify":
+        from page import verify as page_verify
+        rest, by = _take_opt(rest, "--by")
+        if not rest:
+            return _usage("page verify <路径> [--by <身份>]")
+        return page_verify.verify(root, rest[0], by)
+    if cmd == "anchor":
+        from page import anchor
+        if not rest:
+            return _usage("page anchor <路径...>")
+        return anchor.run(root, rest)
+    if cmd in ("tags", "orphans", "unverified"):
+        from page import query as page_query
+        if cmd == "tags":
+            return page_query.tags(root, rest[0] if rest else None)
+        return page_query.orphans(root) if cmd == "orphans" else page_query.unverified(root)
+    return _UNKNOWN
+
+
+def _document(root, cmd, rest):
+    if cmd == "add":
+        from document import add as document_add
+        rest, name = _take_opt(rest, "--name")
+        if not rest:
+            return _usage("document add <文件...> [--name <文件夹名>]")
+        return document_add.add_raw(root, rest, name=name)
+    if cmd == "fetch":
+        from document import fetch as fetch_mod
+        if "--type" in rest and rest.index("--type") + 1 >= len(rest):
+            return _usage("document fetch <url> --type <源类型> [--node]")
+        rest, forced = _take_opt(rest, "--type")
+        scope = "node" if "--node" in rest else "space"
+        rest = [x for x in rest if x != "--node"]
+        if not rest:
+            return _usage("document fetch <url> [--type <源类型>] [--node]")
+        return fetch_mod.run(root, rest[0], forced, scope)
+    if cmd == "list":
+        from document import list as document_list
+        pending = "--pending" in rest
+        rest = [x for x in rest if x != "--pending"]
+        return document_list.raw(root, rest[0] if rest else None, pending=pending)
+    if cmd == "cover":
+        from document import cover as document_cover
+        rest, detail = _take_opt(rest, "--detail")
+        if not rest or len(rest) > 2:
+            return _usage("document cover <素材> [processing|done] [--detail <取用清单>]")
+        return document_cover.cover(root, rest[0], rest[1] if len(rest) > 1 else None, detail=detail)
+    if cmd == "fidelity":
+        from document import fidelity
+        if len(rest) != 2:
+            return _usage("document fidelity <素材路径> <页路径>")
+        return fidelity.run(root, rest[0], rest[1])
+    return _UNKNOWN
+
+
+def _book(root, cmd, rest):
+    if cmd == "new":
+        from book import new as book_new
+        rest, by = _take_opt(rest, "--by")
+        if not rest:
+            return _usage("book new <书名> [--by <身份>]")
+        return book_new.new_book(root, rest[0], by=by)
+    if cmd == "split":
+        from book import split as split_book
+        if len(rest) < 2:
+            return _usage("book split <书籍路径> <输出目录>")
+        return split_book.run(rest[0], rest[1])
+    if cmd == "read":
+        from book import read as book_read
+        if len(rest) < 2:
+            return _usage("book read <书名> <章节>")
+        return book_read.read(root, rest[0], rest[1])
+    if cmd == "deposit":
+        from book import deposit as book_deposit
+        done = "--done" in rest
+        rest = [x for x in rest if x != "--done"]
+        if len(rest) != 2:
+            return _usage("book deposit <书名> <章节> [--done]")
+        return book_deposit.deposit(root, rest[0], rest[1], done=done)
+    if cmd == "images":
+        from book import images as book_images
+        if len(rest) != 1:
+            return _usage("book images <书名>")
+        return book_images.move(root, rest[0])
+    if cmd == "qc":
+        from book import qc as book_qc
+        if len(rest) != 1:
+            return _usage("book qc <书名>")
+        return book_qc.run(root, rest[0])
+    if cmd == "status":
+        from book import status as book_status
+        has_err = "--error" in rest
+        rest, err = _take_opt(rest, "--error")
+        if len(rest) not in (1, 2) or (has_err and (err is None or len(rest) != 2)):
+            return _usage("book status <书名> [<状态> [--error <说明>]]")
+        return book_status.status(root, rest[0], rest[1] if len(rest) == 2 else None, error=err)
+    if cmd == "sync":
+        from book import chapters as book_chapters
+        if len(rest) != 1:
+            return _usage("book sync <书名>")
+        return book_chapters.sync(root, rest[0])
+    if cmd == "cut":
+        from book import chapters as book_chapters
+        if len(rest) < 2:
+            return _usage("book cut <书名> <起始页>:<标题> ...")
+        return book_chapters.cut(root, rest[0], rest[1:])
+    if cmd == "crop":
+        from book import crop as book_crop
+        if len(rest) != 3:
+            return _usage("book crop <页图> <x0,y0,x1,y1> <输出>")
+        return book_crop.crop(rest[0], rest[1], rest[2])
+    if cmd == "list":
+        from book import list as book_list
+        return book_list.books(root)
+    return _UNKNOWN
+
+
+_SCOPE_FN = {"page": _page, "document": _document, "book": _book}
+
+def main(argv):
+    if not argv or argv[0] in ("-h", "--help", "help"):
+        print(USAGE)
+        return 0
+    action, rest = argv[0], argv[1:]
+
+    if action == "init":                   # 新建知识库：目录还不是库，不走 find_root
+        import init
+        return init.main(Path.cwd(), rest)
+
+    # 认不认识先判，再找库根：库外敲错命令也先告诉你「不认识」
+    if action not in SCOPES and action not in TOP:
+        print(f"未知动作：{action}\n")
+        print(USAGE)
+        return 2
+
+    if action in SCOPES:
+        if not rest or rest[0] in ("-h", "--help", "help"):
+            print(USAGE)
+            return 0 if rest else 2
+        root = repo.find_root(Path.cwd())
+        r = _SCOPE_FN[action](root, rest[0], rest[1:])
+        if r is _UNKNOWN:
+            print(f"未知命令：{action} {rest[0]}\n")
+            print(USAGE)
+            return 2
+        return r
+
+    root = repo.find_root(Path.cwd())
+    if action == "upgrade":
+        from upgrade import upgrade
+        return upgrade.run(root)
+    if action == "check":
+        from check import check
+        if rest:
+            return _usage("check")
+        return check.run(root)
+    if action == "tree":
+        import tree
+        return tree.tree(root, write="--write" in rest)
+    import stamp                        # stamp
+    rest, by = _take_opt(rest, "--by")
+    return stamp.stamp(root, all_files="--all" in rest, by=by)
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))

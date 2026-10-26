@@ -1,0 +1,36 @@
+.article { font: var(--wk-font-markdown-base); color: var(--wk-alias-label-primary); line-height: 1.75; word-break: break-word; }
+.article :where(h1) { font: var(--wk-font-markdown-h1); margin: 1.6em 0 .6em; }
+.article :where(h2) { font: var(--wk-font-markdown-h2); margin: 1.8em 0 .6em; padding-bottom: .3em; border-bottom: 1px solid var(--wk-alias-border-l1); }
+.article :where(h3) { font: var(--wk-font-markdown-h3); margin: 1.5em 0 .5em; }
+.article :where(h4) { font: var(--wk-font-markdown-h4); margin: 1.2em 0 .4em; }
+.article :where(h1, h2, h3, h4) { line-height: 1.4; }
+.article :where(p, ul, ol, blockquote, table, pre) { margin: .9em 0; }
+.article :where(ul, ol) { padding-left: 1.5em; }
+.article :where(ul) { list-style: disc; }
+.article :where(ol) { list-style: decimal; }
+.article :where(li) { margin: .25em 0; }
+.article :where(li > input[type=checkbox]) { margin-right: .4em; }
+.article :where(strong) { font-weight: 600; }
+.article :where(a) { color: var(--wk-alias-link); text-decoration: none; cursor: pointer; }
+.article :where(a:hover) { text-decoration: underline; }
+.article :where(a[data-dead]) { color: var(--wk-alias-label-secondary); text-decoration: none; border-bottom: 1px dashed currentColor; cursor: help; }
+.article :where(blockquote) { padding: .2em 1em; border-left: 3px solid var(--wk-alias-border-l2); color: var(--wk-alias-label-secondary); }
+.article :where(code) { font-family: var(--wk-font-mono); font-size: .9em; padding: .1em .35em; border-radius: var(--wk-radius-xs); background: var(--wk-alias-markdown-inline-code); }
+.article :where(pre) { padding: .9em 1em; overflow-x: auto; border-radius: var(--wk-radius-sm); background: var(--wk-alias-markdown-code-block); font: var(--wk-font-markdown-code-block); line-height: 1.6; }
+.article :where(pre code) { padding: 0; background: none; font-size: inherit; }
+.article :where(table) { border-collapse: collapse; display: block; overflow-x: auto; font: var(--wk-font-markdown-table); }
+.article :where(th, td) { border: 1px solid var(--wk-alias-border-l1); padding: .4em .7em; text-align: left; vertical-align: top; }
+.article :where(th) { background: var(--wk-alias-bg-layer-1); font-weight: 600; }
+.article :where(img) { max-width: 100%; border-radius: var(--wk-radius-sm); cursor: zoom-in; }
+/* 嵌入件背景透明：asset 页按宿主明暗自己上色、底色透到正文（embed-theme.ts）；写死白底夜里就是一块白板 */
+.article :where(iframe) { display: block; width: 100%; box-sizing: border-box; border: 1px solid var(--wk-alias-border-l1); border-radius: var(--wk-radius-sm); background: transparent; }
+.article :where(hr) { border: 0; border-top: 1px solid var(--wk-alias-border-l1); margin: 2em 0; }
+.article :where(pre.mermaid) { background: none; padding: 0; display: flex; justify-content: center; }
+.article :where(pre.mermaid > svg) { cursor: zoom-in; }
+.article :where(pre.infographic) { background: none; padding: 0; }
+.article :where(pre.infographic svg) { display: block; max-width: 100%; height: auto; }
+.article :where(.katex-display) { overflow-x: auto; overflow-y: hidden; padding: .25em 0; }
+.article :where(mark), .snippet :where(mark) { background: var(--wk-mark); color: inherit; border-radius: 2px; padding: 0 .1em; }
+.mermaidError { font: var(--wk-font-xxs-12); color: var(--wk-alias-state-error-primary); white-space: pre-wrap; }
+.article :where(h1, h2, h3, h4) { scroll-margin-top: 16px; }
+.article :where(pre) { font-size: 13px; }

@@ -1,0 +1,130 @@
+/* 编辑器包样式：视觉跟阅读页 article 体系一致，变量由插件自己的主题提供 */
+.hidden { display: none; }                /* 语法字符隐藏（光标临近换 .meta 露出） */
+.meta { color: var(--wk-alias-label-tertiary, #999); }
+.fmLine { padding-inline: .8em !important; background: var(--wk-alias-markdown-code-block); color: var(--wk-alias-label-secondary); font-family: var(--wk-font-mono); font-size: .85em; }
+.fmLine[data-fm-edge='start'] { padding-top: .5em !important; border-radius: var(--wk-radius-sm) var(--wk-radius-sm) 0 0; }
+.fmLine[data-fm-edge='end'] { padding-bottom: .5em !important; border-radius: 0 0 var(--wk-radius-sm) var(--wk-radius-sm); }
+/* 编辑态围栏露源码：与代码块渲染件（.blockFallback / 阅读页 pre）同底色同字体，逐行拼成一块 */
+/* 背景带 !important：surface 主题的 .cm-activeLine 透明底（两级类选择器）比 .codeLine 优先，光标行会在代码块里抠出一条无底色的行 */
+.codeLine { padding-inline: 1em !important; background: var(--wk-alias-markdown-code-block) !important; font: var(--wk-font-markdown-code-block); font-size: 13px; line-height: 1.6; }
+.codeLine[data-code-edge='start'], .codeLine[data-code-edge='only'] { padding-top: .9em !important; border-top-left-radius: var(--wk-radius-sm); border-top-right-radius: var(--wk-radius-sm); }
+.codeLine[data-code-edge='end'], .codeLine[data-code-edge='only'] { padding-bottom: .9em !important; border-bottom-left-radius: var(--wk-radius-sm); border-bottom-right-radius: var(--wk-radius-sm); }
+/* 块间距体系：markdown 块之间必有的空行承担全部垂直间距（.9 行距 ≈ 阅读页块距 .9em）。标题的
+   垂直间距必须用 padding 不能用 margin——CM6 逐行量高走 getBoundingClientRect，折叠 margin
+   不属于任何一行的盒子，heightmap 永远看不到：每过一个标题累计 ~34px 偏差，posAtCoords（点击
+   落点）与 coordsAtPos（光标画位）双双错行，越往文档中段越歪。padding 计入行盒，测量无盲区 */
+.blockView { position: relative; }
+.blockView[data-lightbox] { cursor: zoom-in; }
+.blockView[data-lightbox][data-mode='edit'] { cursor: default; }   /* 编辑态点图是原子选中，不是全屏/文本光标 */
+.blockView > svg { display: block; }   /* svg 按 inline 排会留基线空隙（图下方白边） */
+/* 原子块选中态：边框常驻（平时透明、选中变蓝），只有颜色切换、无尺寸变化——
+   native selection 画不到替换装饰上，视觉由 data-selected 承担；border-radius 同理常驻防拐角跳变 */
+[data-atomic] { border: 2px solid transparent; border-radius: var(--wk-radius-sm); }
+[data-atomic][data-selected] { border-color: var(--wk-alias-link); }
+/* 块之间的空行不占整行高（阅读页空行只体现为 margin）：只含 <br> 的 cm-line 压到 .9 行距 */
+.docView :global(.cm-line):has(> br:only-child) { line-height: .9; }
+/* 标题正上方的空行压零高（标题的 padding-top 已含块距，空行再占高会叠成两倍）；光标所在行豁免
+   （cm-activeLine 由 surface 的 highlightActiveLine 下发）——0 高行里光标不可见。data-h 由 deco 下发 */
+.docView :global(.cm-line):has(> br:only-child):not(:global(.cm-activeLine)):has(+ [data-h]) { line-height: 0; }
+/* 标题后的 Markdown 空行同样压零高：空行占高时鼠标点缝隙最左会命中它，原生 caret 刃（字号 strut 高）
+   骑在零点几倍行高的空行上、悬浮在缝中间；段后距改由标题 padding-bottom 的 +6px 补偿承担。 */
+.docView [data-h] + :global(.cm-line):has(> br:only-child):not(:global(.cm-activeLine)) { line-height: 0; }
+.blockHtml { border-radius: var(--wk-radius-sm); }
+.blockHtml > :first-child { margin-top: 0; }
+.blockHtml > :last-child { margin-bottom: 0; }
+.blockFallback { white-space: pre-wrap; padding: .9em 1em; border-radius: var(--wk-radius-sm); background: var(--wk-alias-markdown-code-block); font: var(--wk-font-markdown-code-block); margin: 0; }
+.inlineImg img { max-width: 100%; border-radius: var(--wk-radius-sm); }
+.math { font-family: var(--wk-font-mono); padding: .1em .2em; }
+.wikilink { color: var(--wk-alias-link); cursor: pointer; }
+.wikilink:hover { text-decoration: underline; }
+.wikilink.dead { color: var(--wk-alias-danger, #d0453b); text-decoration: line-through; }
+.task { accent-color: var(--wk-alias-link); margin-right: .35em; }
+.hrView { display: inline-block; width: 100%; vertical-align: middle; border-top: 1px solid var(--wk-alias-border-l1); }
+/* excalidraw 图位占位：未画（虚线框）与取件失败（文件不在/损坏）共用，中性色不吓人 */
+.exdNote { white-space: pre-wrap; padding: .8em 1em; border-radius: var(--wk-radius-sm); border: 1px dashed var(--wk-alias-border, #ccc); color: var(--wk-alias-text-secondary, #888); font-size: .85em; margin: 0; }
+.mermaidErr { white-space: pre-wrap; padding: .8em 1em; border-radius: var(--wk-radius-sm); background: var(--wk-alias-markdown-code-block); color: var(--wk-alias-danger, #d0453b); font-size: .85em; margin: 0; }
+.editShield iframe { pointer-events: none; }
+.num { color: var(--wk-alias-label-secondary); }
+/* 行级视觉（deco.ts 行 class）：CM6 渲染出的是 div.cm-line，article 的元素选择器够不着，
+   标题层级/圆点/引用边界由这些类承担。标题选择器必须高于 CM6 基础主题的 .cm-line padding
+   简写，否则其上下 padding 会被清零；值与阅读页 article h1–h4 令牌对齐，h5/h6 收敛 h4。 */
+.strong { font-weight: 600; }
+.em { font-style: italic; }
+.del { text-decoration: line-through; }
+.code { font-family: var(--wk-font-mono); font-size: .9em; padding: .1em .35em; border-radius: var(--wk-radius-xs); background: var(--wk-alias-markdown-inline-code); }
+.docView :global(.cm-line).h1 { font: var(--wk-font-markdown-h1); margin: 0; padding-top: 1.3em; padding-bottom: calc(.15em + 6px); line-height: 1.4; }
+.docView :global(.cm-line).h2 { font: var(--wk-font-markdown-h2); margin: 0; padding-top: 1.4em; padding-bottom: calc(.2em + 6px); border-bottom: 1px solid var(--wk-alias-border-l1); line-height: 1.4; }
+.docView :global(.cm-line).h3 { font: var(--wk-font-markdown-h3); margin: 0; padding-top: 1.15em; padding-bottom: calc(.1em + 6px); line-height: 1.4; }
+.docView :global(.cm-line).h4 { font: var(--wk-font-markdown-h4); margin: 0; padding-top: 1em; padding-bottom: calc(.05em + 6px); line-height: 1.4; }
+.bullet::before { content: '•'; display: inline-block; width: 1.2em; color: var(--wk-alias-label-secondary); }
+.docView :global(.cm-line).quote { padding-left: 1em; border-left: 3px solid var(--wk-alias-border-l2); color: var(--wk-alias-label-secondary); }
+.lightbox { position: fixed; inset: 0; z-index: 2000; background: rgba(0, 0, 0, .82); display: flex; align-items: center; justify-content: center; }
+.lbStage { position: relative; width: 100%; height: 100%; overflow: hidden; overscroll-behavior: contain; touch-action: none; user-select: none; cursor: grab; }
+.lbStage:active { cursor: grabbing; }
+/* 内容按自然尺寸摆在舞台左上角，缩放 / 平移只走 transform（lightbox.ts 打开即适应窗口） */
+.lbInner { position: absolute; left: 0; top: 0; transform-origin: 0 0; will-change: transform; }
+.lbInner > * { display: block; margin: 0; }
+/* 图垫主题底色：box-shadow 外扩当留白，不改内容尺寸（适应窗口的计算不受影响）；跟着缩放一起放大 */
+.lbInner[data-paper] { background: var(--wk-alias-bg-base, #fff); border-radius: 6px; box-shadow: 0 0 0 16px var(--wk-alias-bg-base, #fff), 0 12px 40px 16px rgba(0, 0, 0, .35); }
+.lbInner [data-lightbox] { cursor: inherit; }
+.lbInner img, .lbInner svg, .lbInner canvas { display: block; max-width: none; max-height: none; }
+.lbBar { position: absolute; left: 50%; bottom: 20px; transform: translateX(-50%); display: flex; align-items: center; gap: 2px; padding: 4px; border-radius: 10px; background: rgba(28, 28, 30, .92); box-shadow: 0 4px 16px rgba(0, 0, 0, .35); color: #f2f2f2; }
+.lbBtn { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border: 0; border-radius: 7px; background: transparent; color: inherit; cursor: pointer; }
+.lbBtn svg { display: block; width: 16px; height: 16px; }
+.lbBtn:hover { background: rgba(255, 255, 255, .12); }
+.lbBtn:focus-visible { outline: 2px solid rgba(255, 255, 255, .7); outline-offset: -2px; }
+.lbZoom { min-width: 52px; text-align: center; font-size: 12px; font-variant-numeric: tabular-nums; }
+.docView { position: relative; min-height: 100%; }
+.err { padding: 1em; color: var(--wk-alias-danger, #d0453b); }
+.conflict { display: flex; gap: .8em; align-items: center; padding: .6em 1em; margin: .8em 0; border-radius: var(--wk-radius-sm); background: var(--wk-alias-markdown-code-block); font-size: .9em; }
+.conflict button { cursor: pointer; }
+.tblRoot { width: 100%; max-width: 100%; min-width: 0; overflow: hidden; }
+.tblScroll { width: 100%; max-width: 100%; min-width: 0; overflow-x: auto; border: 1px solid var(--wk-alias-border-l1); border-radius: var(--wk-radius-sm); box-sizing: border-box; }
+.tblRoot table { display: table; width: 100%; max-width: 100%; min-width: 0; table-layout: fixed; border-collapse: collapse; margin: 0; overflow: visible; font: var(--wk-font-markdown-table); }
+.tblRoot th, .tblRoot td { min-width: 0; border: 0; border-right: 1px solid var(--wk-alias-border-l1); border-bottom: 1px solid var(--wk-alias-border-l1); padding: 0; font: inherit; vertical-align: top; overflow: hidden; overflow-wrap: anywhere; word-break: break-word; white-space: normal; }
+.tblRoot tr > :last-child { border-right: 0; }
+.tblRoot tbody tr:last-child td { border-bottom: 0; }
+.tblRoot th { background: var(--wk-alias-bg-layer-1); color: var(--wk-alias-label-primary); font-weight: 600; }
+.tblCell { width: 100%; max-width: 100%; min-width: 0; min-height: 1.7em; padding: .45em .7em; box-sizing: border-box; cursor: cell; outline: none; overflow-wrap: anywhere; word-break: break-word; white-space: normal; box-shadow: inset 0 0 0 0 transparent; transition: background-color 120ms ease, box-shadow 120ms ease; }
+.tblRead .tblCell { cursor: default; }
+.tblCell :where(p) { margin: 0; }
+.tblCell :where(p, span, a, code) { max-width: 100%; overflow-wrap: anywhere; word-break: break-word; white-space: normal; }
+.tblCellSelected { position: relative; z-index: 1; box-shadow: inset 0 0 0 2px var(--wk-alias-link); }
+/* 主编辑器 theme 的后代选择器也会命中嵌套 mini（尤其 content 的 40vh 底 padding）。
+   动态 theme 注入顺序晚于模块 CSS，因此这里用 important 明确建立嵌套编辑器边界。 */
+.tblCell :global(.cm-editor) { width: 100% !important; max-width: 100% !important; min-width: 0 !important; height: auto !important; min-height: 0 !important; background: transparent; }
+.tblCell :global(.cm-scroller) { width: 100% !important; max-width: 100% !important; min-width: 0 !important; height: auto !important; min-height: 0 !important; overflow: hidden !important; font: inherit; line-height: inherit; }
+.tblCell :global(.cm-content) { width: 100% !important; max-width: 100% !important; min-width: 0 !important; height: auto !important; min-height: 0 !important; padding: 0 !important; white-space: pre-wrap !important; overflow-wrap: anywhere !important; word-break: break-word !important; }
+.tblCell :global(.cm-line) { max-width: 100%; padding-left: 0 !important; padding-right: 0 !important; white-space: pre-wrap !important; overflow-wrap: anywhere !important; word-break: break-word !important; }
+.tblCell :global(.cm-editor.cm-focused), .tblCell :global(.cm-content:focus), .tblCell :global(.cm-content:focus-visible) { outline: none !important; }
+.tblBar { position: fixed; z-index: 3000; display: flex; align-items: center; gap: 2px; min-height: 30px; padding: 3px; border: 1px solid var(--wk-alias-border-l1); border-radius: var(--wk-radius-sm); background: var(--wk-alias-bg-base); color: var(--wk-alias-label-secondary); box-shadow: 0 7px 20px rgba(0, 0, 0, .12); box-sizing: border-box; }
+.tblBar[hidden] { display: none; }
+.tblBar button { position: relative; display: inline-grid; place-items: center; width: 28px; height: 28px; flex: none; border: 0; border-radius: var(--wk-radius-xs); padding: 0; background: transparent; color: inherit; cursor: pointer; }
+.tblBar button:hover:not(:disabled), .tblBar button:focus-visible { background: var(--wk-alias-interactive-bg-hover); color: var(--wk-alias-label-primary); outline: none; }
+.tblBar button[data-tooltip]::after { position: absolute; left: 50%; z-index: 1; content: attr(data-tooltip); width: max-content; max-width: 12em; padding: 4px 7px; border-radius: var(--wk-radius-xs); background: var(--wk-alias-bg-reverse, #202124); color: var(--wk-alias-label-reverse, #fff); font: var(--wk-font-s-12); line-height: 1.4; letter-spacing: 0; white-space: nowrap; pointer-events: none; opacity: 0; visibility: hidden; transform: translateX(-50%); transition: opacity 100ms ease; }
+.tblBar[data-placement='above'] button[data-tooltip]::after { top: calc(100% + 6px); }
+.tblBar[data-placement='below'] button[data-tooltip]::after { bottom: calc(100% + 6px); }
+.tblBar button[data-tooltip]:hover::after, .tblBar button[data-tooltip]:focus-visible::after { opacity: 1; visibility: visible; }
+.tblBar button[aria-pressed='true'] { background: var(--wk-alias-interactive-bg-hover); color: var(--wk-alias-link); }
+.tblBar button:disabled { opacity: .32; cursor: default; }
+.tblBar button svg { display: block; width: 16px; height: 16px; }
+.tblBarSep { width: 1px; height: 18px; margin: 0 3px; background: var(--wk-alias-border-l1); }
+.tblDanger:hover:not(:disabled) { color: var(--wk-alias-danger, #d0453b) !important; }
+.tblMenu { position: fixed; z-index: 3000; display: flex; flex-direction: column; width: 208px; padding: 5px; border: 1px solid var(--wk-alias-border-l1); border-radius: var(--wk-radius-sm); background: var(--wk-alias-bg-base); color: var(--wk-alias-label-primary); box-shadow: 0 12px 30px rgba(0, 0, 0, .16); box-sizing: border-box; }
+.tblMenu[hidden] { display: none; }
+.tblMenu button { display: grid; grid-template-columns: 22px minmax(0, 1fr); align-items: center; width: 100%; min-height: 32px; border: 0; border-radius: var(--wk-radius-xs); padding: 4px 8px; background: transparent; color: inherit; font: var(--wk-font-s-14); text-align: left; cursor: pointer; }
+.tblMenu button[hidden] { display: none; }
+.tblMenu button:hover:not(:disabled), .tblMenu button:focus-visible { background: var(--wk-alias-interactive-bg-hover); outline: none; }
+.tblMenu button[aria-checked='true'] { color: var(--wk-alias-link); background: var(--wk-alias-interactive-bg-hover); }
+.tblMenu button:disabled { opacity: .35; cursor: default; }
+.tblMenuIcon { display: block; width: 16px; overflow: hidden; color: var(--wk-alias-label-secondary); font: 600 13px/16px var(--wk-font-mono); text-align: center; letter-spacing: 0; }
+.tblMenu .tblAlignLeft .tblMenuIcon { text-align: left; }
+.tblMenu .tblAlignCenter .tblMenuIcon { text-align: center; }
+.tblMenu .tblAlignRight .tblMenuIcon { text-align: right; }
+.tblMenuSep { height: 1px; margin: 4px 5px; background: var(--wk-alias-border-l1); }
+.tblMenu .tblDanger:not(:disabled) { color: var(--wk-alias-danger, #d0453b); }
+/* 原子块右键菜单：编辑器自渲染（blockmenu.ts），fixed 挂 body，z 压过正文嵌入件 */
+.blockMenu { position: fixed; z-index: 1150; min-width: 168px; display: flex; flex-direction: column; padding: 5px; background: var(--wk-alias-bg, #fff); border: 1px solid var(--wk-alias-border-l1, #ddd); border-radius: var(--wk-radius-sm); box-shadow: 0 6px 18px rgba(0, 0, 0, .16); font-size: .85em; }
+.blockMenu button { all: unset; padding: 6px 10px; border-radius: var(--wk-radius-sm); cursor: pointer; color: var(--wk-alias-label-primary, #333); }
+.blockMenu button:hover { background: var(--wk-alias-fill-hover, #f0f2f8); }
+.blockMenu button[data-danger] { color: var(--wk-alias-danger, #d0453b); }

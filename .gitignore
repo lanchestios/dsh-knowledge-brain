@@ -1,0 +1,15 @@
+node_modules/
+.superpowers/
+__pycache__/
+
+# dev 构建的 sourcemap（pack 产物不含，仓库也从未跟踪）
+lib/*.map
+.claude/worktrees/
+
+# 设计文档与实施计划只留本地，不入库
+docs/
+
+# 本地 agent/claude 配置不入库
+.agents/
+.claude/
+skills-lock.json

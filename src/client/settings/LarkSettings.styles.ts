@@ -1,0 +1,26 @@
+// Shared Tailwind recipes; interaction and state stay in the consuming components.
+const styles: Record<string, string> = {
+  "block": "wk:mt-6 wk:flex wk:flex-col wk:gap-[10px]",
+  "headRow": "wk:flex wk:items-center wk:gap-2",
+  "title": "wk:m-0 wk:text-[13px] wk:font-medium wk:leading-normal wk:text-foreground",
+  "actBtn": "wk:inline-flex wk:items-center wk:gap-1 wk:h-[26px] wk:py-0 wk:px-2 wk:border-0 wk:rounded-[var(--wk-radius-sm)] wk:bg-transparent wk:text-xs wk:text-secondary-foreground wk:cursor-pointer wk:[&:hover:not(:disabled)]:bg-accent wk:[&:hover:not(:disabled)]:text-foreground wk:[&:disabled]:opacity-40 wk:[&:disabled]:cursor-default",
+  "addBtn": "wk:inline-flex wk:items-center wk:gap-1 wk:h-[26px] wk:py-0 wk:px-2 wk:border-0 wk:rounded-[var(--wk-radius-sm)] wk:bg-transparent wk:text-xs wk:text-secondary-foreground wk:cursor-pointer wk:ml-auto wk:[&:hover:not(:disabled)]:bg-accent wk:[&:hover:not(:disabled)]:text-foreground wk:[&:disabled]:opacity-40 wk:[&:disabled]:cursor-default",
+  "cards": "wk:flex wk:flex-col wk:gap-[10px]",
+  "botCard": "wk:flex wk:flex-col wk:gap-2 wk:py-[10px] wk:px-3 wk:[border:0.5px_solid_var(--wk-alias-border-l2)] wk:rounded-[var(--wk-radius-md)]",
+  "botHead": "wk:flex wk:items-center wk:gap-2 wk:min-w-0 wk:flex-wrap",
+  "botName": "wk:text-[13px] wk:font-medium wk:leading-normal wk:text-foreground wk:overflow-hidden wk:text-ellipsis wk:whitespace-nowrap wk:max-w-full",
+  "botId": "wk:text-[11px] wk:text-muted-foreground wk:overflow-hidden wk:text-ellipsis wk:whitespace-nowrap wk:max-w-full",
+  "cardActions": "wk:ml-auto wk:inline-flex wk:items-center wk:gap-1 wk:shrink-0",
+  "botMeta": "wk:flex wk:items-center wk:gap-2 wk:min-w-0 wk:text-xs wk:leading-normal wk:text-secondary-foreground wk:[&_>_span:first-child]:overflow-hidden wk:[&_>_span:first-child]:text-ellipsis wk:[&_>_span:first-child]:whitespace-nowrap",
+  "botModel": "wk:text-[11px] wk:text-muted-foreground wk:overflow-hidden wk:text-ellipsis wk:whitespace-nowrap",
+  "verifyOk": "wk:m-0 wk:text-xs wk:leading-normal wk:text-primary wk:[word-break:break-all] wk:min-w-0",
+  "verifyErr": "wk:m-0 wk:text-xs wk:leading-normal wk:text-destructive wk:[word-break:break-all] wk:min-w-0",
+  "scopeList": "wk:mt-[2px] wk:mr-0 wk:mb-0 wk:ml-0 wk:p-0 wk:list-none wk:text-xs wk:leading-[1.6] wk:min-w-0 wk:[&_code]:text-[11px]",
+  "scopeErr": "wk:text-destructive",
+  "scopeWarn": "wk:text-[var(--wk-alias-state-warn-primary)]",
+  "form": "wk:flex wk:flex-col wk:gap-3",
+  "mField": "wk:flex wk:flex-col wk:gap-1 wk:[&_>_span]:text-[12px] wk:[&_>_span]:leading-[1.4] wk:[&_>_span]:text-secondary-foreground",
+  "guideEntry": "wk:mt-1 wk:flex wk:flex-col wk:gap-2",
+  "guideBox": "wk:[border:0.5px_solid_var(--wk-alias-border-l2)] wk:rounded-[var(--wk-radius-md)] wk:py-[10px] wk:px-3 wk:flex wk:flex-col wk:gap-2 wk:text-xs wk:leading-[1.7] wk:text-secondary-foreground wk:[&_p]:m-0 wk:[&_ol]:m-0 wk:[&_ol]:pl-[18px] wk:[&_a]:text-foreground wk:[&_code]:text-[11px]",
+}
+export default styles
