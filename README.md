@@ -38,8 +38,10 @@
 给模型用：
 
 - **工具**：`wiki_search` / `wiki_read_page` / `wiki_tree` / `wiki_tags` / `wiki_backlinks` / `wiki_raw`
-- **技能**：`wiki` 管分区规则与库务，`wiki-read` 管只读检索，`wiki-write` 编排一页的写作与验收，`wiki-write-book-ingest` 将书籍源文件整理到可读。
+- **技能**：`wiki` 管分区规则与库务，`wiki-read` 管只读检索，`wiki-method` 按任务发现并应用当前库的方法论，`wiki-write` 编排一页的写作与验收，`wiki-write-book-ingest` 将书籍源文件整理到可读。
 - **写作流程**：调研、起草、去 AI 味与审校分别由 `wiki-write-explore`、`wiki-write-draft`、`wiki-write-humanize`、`wiki-write-review` 承担。`wiki-write` 按场景顺序派发宿主通用子智能体，读取对应技能、通过文件交接，最终由主会话验收。需要宿主启用通用子智能体能力；联网与写入范围等约束写在技能中，工具权限由宿主决定。
+
+需要分析问题、设计方案、拆解系统、制定计划，或明确要求使用库内方法时，模型可选择 `wiki-method`。它从当前库的认知区门面、方法导航与目录发现适用方法，按需读取步骤、判据和可信边界，再用于任务。方法内容保留在知识库；修改或新增方法后，后续读取直接使用当前内容，无需重新发布插件。新任务、目标或约束变化、用户指出方法更新、长任务进入下一阶段时重新读取或选择；本机制不监听单个执行阶段中途的内容变化，也不将每篇方法注册成独立技能。
 
 外延：
 
